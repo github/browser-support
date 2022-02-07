@@ -1,4 +1,5 @@
 import * as abortSignalAbort from './abortsignal-abort.js'
+import * as abortSignalTimeout from './abortsignal-timeout.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -34,13 +35,21 @@ const baseSupport =
   true
 
 export function isSupported() {
-  return baseSupport && abortSignalAbort.isSupported()
+  return (
+    baseSupport &&
+    abortSignalAbort.isSupported() &&
+    abortSignalTimeout.isSupported()
+  )
 }
 
 export function isPolyfilled() {
-  return abortSignalAbort.isPolyfilled()
+  return (
+    abortSignalAbort.isPolyfilled() &&
+    abortSignalTimeout.isPolyfilled()
+  )
 }
 
 export function apply() {
   abortSignalAbort.apply()
+  abortSignalTimeout.apply()
 }
