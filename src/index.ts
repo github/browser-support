@@ -1,3 +1,5 @@
+import * as abortSignalAbort from './abortsignal-abort.js'
+
 const baseSupport =
   typeof Blob === 'function' &&
   typeof PerformanceObserver === 'function' &&
@@ -32,13 +34,13 @@ const baseSupport =
   true
 
 export function isSupported() {
-  return baseSupport
+  return baseSupport && abortSignalAbort.isSupported()
 }
 
 export function isPolyfilled() {
-  return false
+  return abortSignalAbort.isPolyfilled()
 }
 
 export function apply() {
-  return
+  abortSignalAbort.apply()
 }
