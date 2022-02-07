@@ -1,6 +1,7 @@
 import * as abortSignalAbort from './abortsignal-abort.js'
 import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as aggregateError from './aggregateerror.js'
+import * as arrayAt from './arraylike-at.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -40,7 +41,8 @@ export function isSupported() {
     baseSupport &&
     abortSignalAbort.isSupported() &&
     abortSignalTimeout.isSupported() &&
-    aggregateError.isSupported()
+    aggregateError.isSupported() &&
+    arrayAt.isSupported()
   )
 }
 
@@ -48,7 +50,8 @@ export function isPolyfilled() {
   return (
     abortSignalAbort.isPolyfilled() &&
     abortSignalTimeout.isPolyfilled() &&
-    aggregateError.isPolyfilled()
+    aggregateError.isPolyfilled() &&
+    arrayAt.isPolyfilled()
   )
 }
 
@@ -56,4 +59,5 @@ export function apply() {
   abortSignalAbort.apply()
   abortSignalTimeout.apply()
   aggregateError.apply()
+  arrayAt.apply()
 }
