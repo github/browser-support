@@ -4,6 +4,7 @@ import * as aggregateError from './aggregateerror.js'
 import * as arrayAt from './arraylike-at.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as eventAbortSignal from './event-abortsignal.js'
+import * as objectHasOwn from './object-hasown.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -46,7 +47,8 @@ export function isSupported() {
     aggregateError.isSupported() &&
     arrayAt.isSupported() &&
     cryptoRandomUUID.isSupported() &&
-    eventAbortSignal.isSupported()
+    eventAbortSignal.isSupported() &&
+    objectHasOwn.isSupported()
   )
 }
 
@@ -57,7 +59,8 @@ export function isPolyfilled() {
     aggregateError.isPolyfilled() &&
     arrayAt.isPolyfilled() &&
     cryptoRandomUUID.isPolyfilled() &&
-    eventAbortSignal.isPolyfilled()
+    eventAbortSignal.isPolyfilled() &&
+    objectHasOwn.isPolyfilled()
   )
 }
 
@@ -68,4 +71,5 @@ export function apply() {
   arrayAt.apply()
   cryptoRandomUUID.apply()
   eventAbortSignal.apply()
+  objectHasOwn.apply()
 }
