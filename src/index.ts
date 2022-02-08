@@ -3,6 +3,7 @@ import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as aggregateError from './aggregateerror.js'
 import * as arrayAt from './arraylike-at.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
+import * as eventAbortSignal from './event-abortsignal.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -44,7 +45,8 @@ export function isSupported() {
     abortSignalTimeout.isSupported() &&
     aggregateError.isSupported() &&
     arrayAt.isSupported() &&
-    cryptoRandomUUID.isSupported()
+    cryptoRandomUUID.isSupported() &&
+    eventAbortSignal.isSupported()
   )
 }
 
@@ -54,7 +56,8 @@ export function isPolyfilled() {
     abortSignalTimeout.isPolyfilled() &&
     aggregateError.isPolyfilled() &&
     arrayAt.isPolyfilled() &&
-    cryptoRandomUUID.isPolyfilled()
+    cryptoRandomUUID.isPolyfilled() &&
+    eventAbortSignal.isPolyfilled()
   )
 }
 
@@ -64,4 +67,5 @@ export function apply() {
   aggregateError.apply()
   arrayAt.apply()
   cryptoRandomUUID.apply()
+  eventAbortSignal.apply()
 }
