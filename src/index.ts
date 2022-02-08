@@ -6,6 +6,7 @@ import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as objectHasOwn from './object-hasown.js'
 import * as promiseAny from './promise-any.js'
+import * as requestIdleCallback from './requestidlecallback.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -50,7 +51,8 @@ export function isSupported() {
     cryptoRandomUUID.isSupported() &&
     eventAbortSignal.isSupported() &&
     objectHasOwn.isSupported() &&
-    promiseAny.isSupported()
+    promiseAny.isSupported() &&
+    requestIdleCallback.isSupported()
   )
 }
 
@@ -63,7 +65,8 @@ export function isPolyfilled() {
     cryptoRandomUUID.isPolyfilled() &&
     eventAbortSignal.isPolyfilled() &&
     objectHasOwn.isPolyfilled() &&
-    promiseAny.isPolyfilled()
+    promiseAny.isPolyfilled() &&
+    requestIdleCallback.isPolyfilled()
   )
 }
 
@@ -76,4 +79,5 @@ export function apply() {
   eventAbortSignal.apply()
   objectHasOwn.apply()
   promiseAny.apply()
+  requestIdleCallback.apply()
 }
