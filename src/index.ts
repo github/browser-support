@@ -5,6 +5,7 @@ import * as arrayAt from './arraylike-at.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as objectHasOwn from './object-hasown.js'
+import * as promiseAny from './promise-any.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -48,7 +49,8 @@ export function isSupported() {
     arrayAt.isSupported() &&
     cryptoRandomUUID.isSupported() &&
     eventAbortSignal.isSupported() &&
-    objectHasOwn.isSupported()
+    objectHasOwn.isSupported() &&
+    promiseAny.isSupported()
   )
 }
 
@@ -60,7 +62,8 @@ export function isPolyfilled() {
     arrayAt.isPolyfilled() &&
     cryptoRandomUUID.isPolyfilled() &&
     eventAbortSignal.isPolyfilled() &&
-    objectHasOwn.isPolyfilled()
+    objectHasOwn.isPolyfilled() &&
+    promiseAny.isPolyfilled()
   )
 }
 
@@ -72,4 +75,5 @@ export function apply() {
   cryptoRandomUUID.apply()
   eventAbortSignal.apply()
   objectHasOwn.apply()
+  promiseAny.apply()
 }
