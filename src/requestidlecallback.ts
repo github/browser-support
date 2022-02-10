@@ -33,7 +33,7 @@ export function cancelIdleCallback(id: number): void {
 
 /*#__PURE__*/
 export function isSupported(): boolean {
-  return typeof requestIdleCallback === 'function'
+  return typeof globalThis.requestIdleCallback === 'function'
 }
 
 /*#__PURE__*/
