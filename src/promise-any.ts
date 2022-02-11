@@ -43,6 +43,6 @@ export function isPolyfilled(): boolean {
 
 export function apply(): void {
   if (!isSupported()) {
-    Promise.all = promiseAny
+    Promise.any = promiseAny
   }
 }
