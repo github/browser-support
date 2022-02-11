@@ -23,6 +23,7 @@ const baseSupport =
   typeof HTMLDetailsElement === 'function' &&
   typeof AbortController === 'function' &&
   typeof AbortSignal === 'function' &&
+  typeof globalThis === 'object' &&
   'entries' in FormData.prototype &&
   'toggleAttribute' in Element.prototype &&
   'replaceChildren' in Element.prototype &&
