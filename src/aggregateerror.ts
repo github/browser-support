@@ -21,7 +21,7 @@ export class AggregateError extends Error {
 
 /*#__PURE__*/
 export function isSupported(): boolean {
-  return typeof AggregateError === 'function'
+  return typeof globalThis.AggregateError === 'function'
 }
 
 /*#__PURE__*/
