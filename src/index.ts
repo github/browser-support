@@ -3,6 +3,7 @@ import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as aggregateError from './aggregateerror.js'
 import * as arrayAt from './arraylike-at.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
+import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as objectHasOwn from './object-hasown.js'
 import * as promiseAny from './promise-any.js'
@@ -26,7 +27,6 @@ const baseSupport =
   typeof globalThis === 'object' &&
   'entries' in FormData.prototype &&
   'toggleAttribute' in Element.prototype &&
-  'replaceChildren' in Element.prototype &&
   // ES2019
   'fromEntries' in Object &&
   'flatMap' in Array.prototype &&
@@ -48,6 +48,7 @@ const polyfills = [
   aggregateError,
   arrayAt,
   cryptoRandomUUID,
+  elementReplaceChildren
   eventAbortSignal,
   objectHasOwn,
   promiseAny,
