@@ -48,7 +48,7 @@ const polyfills = [
   aggregateError,
   arrayAt,
   cryptoRandomUUID,
-  elementReplaceChildren
+  elementReplaceChildren,
   eventAbortSignal,
   objectHasOwn,
   promiseAny,
