@@ -42,43 +42,35 @@ const baseSupport =
   // 'at' in Array.prototype && // Polyfilled
   true
 
+const polyfills = [
+  abortSignalAbort,
+  abortSignalTimeout,
+  aggregateError,
+  arrayAt,
+  cryptoRandomUUID,
+  eventAbortSignal,
+  objectHasOwn,
+  promiseAny,
+  requestIdleCallback
+]
+
 export function isSupported() {
   return (
     baseSupport &&
-    abortSignalAbort.isSupported() &&
-    abortSignalTimeout.isSupported() &&
-    aggregateError.isSupported() &&
-    arrayAt.isSupported() &&
-    cryptoRandomUUID.isSupported() &&
-    eventAbortSignal.isSupported() &&
-    objectHasOwn.isSupported() &&
-    promiseAny.isSupported() &&
-    requestIdleCallback.isSupported()
+    polyfills.every(polyfill => {
+      polyfill.isSupported()
+    })
   )
 }
 
 export function isPolyfilled() {
-  return (
-    abortSignalAbort.isPolyfilled() &&
-    abortSignalTimeout.isPolyfilled() &&
-    aggregateError.isPolyfilled() &&
-    arrayAt.isPolyfilled() &&
-    cryptoRandomUUID.isPolyfilled() &&
-    eventAbortSignal.isPolyfilled() &&
-    objectHasOwn.isPolyfilled() &&
-    promiseAny.isPolyfilled() &&
-    requestIdleCallback.isPolyfilled()
-  )
+  return polyfills.every(polyfill => {
+    polyfill.isPolyfilled()
+  })
 }
 
 export function apply() {
-  abortSignalAbort.apply()
-  abortSignalTimeout.apply()
-  aggregateError.apply()
-  arrayAt.apply()
-  cryptoRandomUUID.apply()
-  eventAbortSignal.apply()
-  objectHasOwn.apply()
-  promiseAny.apply()
-  requestIdleCallback.apply()
+  for (const polyfill of polyfills) {
+    polyfill.apply()
+  }
 }
