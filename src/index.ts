@@ -6,6 +6,7 @@ import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as objectHasOwn from './object-hasown.js'
+import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 
@@ -32,7 +33,7 @@ const baseSupport =
   'flatMap' in Array.prototype &&
   'trimEnd' in String.prototype &&
   // ES2020
-  'allSettled' in Promise &&
+  //'allSettled' in Promise && // Polyfilled
   'matchAll' in String.prototype &&
   // ES2021
   'replaceAll' in String.prototype &&
@@ -51,6 +52,7 @@ const polyfills = [
   elementReplaceChildren,
   eventAbortSignal,
   objectHasOwn,
+  promiseAllSettled,
   promiseAny,
   requestIdleCallback
 ]
