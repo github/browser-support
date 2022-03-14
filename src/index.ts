@@ -36,7 +36,7 @@ const baseSupport =
   //'allSettled' in Promise && // Polyfilled
   'matchAll' in String.prototype &&
   // ES2021
-  'replaceAll' in String.prototype &&
+  //'replaceAll' in String.prototype && // Polyfilled
   // 'any' in Promise && // Polyfilled
   // ES2022
   // 'at' in String.prototype && // Polyfilled
