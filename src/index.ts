@@ -9,6 +9,7 @@ import * as objectHasOwn from './object-hasown.js'
 import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
 import * as requestIdleCallback from './requestidlecallback.js'
+import * as stringReplaceAll from './string-replaceall.js'
 
 const baseSupport =
   typeof Blob === 'function' &&
@@ -54,7 +55,8 @@ const polyfills = [
   objectHasOwn,
   promiseAllSettled,
   promiseAny,
-  requestIdleCallback
+  requestIdleCallback,
+  stringReplaceAll
 ]
 
 export function isSupported() {
