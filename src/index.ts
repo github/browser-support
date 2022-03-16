@@ -9,8 +9,9 @@ import * as objectHasOwn from './object-hasown.js'
 import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
 import * as requestIdleCallback from './requestidlecallback.js'
+import * as stringReplaceAll from './string-replaceall.js'
 
-const baseSupport =
+export const baseSupport =
   typeof Blob === 'function' &&
   typeof PerformanceObserver === 'function' &&
   typeof Intl === 'object' &&
@@ -43,7 +44,7 @@ const baseSupport =
   // 'at' in Array.prototype && // Polyfilled
   true
 
-const polyfills = [
+export const polyfills = {
   abortSignalAbort,
   abortSignalTimeout,
   aggregateError,
@@ -54,26 +55,27 @@ const polyfills = [
   objectHasOwn,
   promiseAllSettled,
   promiseAny,
-  requestIdleCallback
-]
+  requestIdleCallback,
+  stringReplaceAll
+}
 
 export function isSupported() {
   return (
     baseSupport &&
-    polyfills.every(polyfill => {
+    Object.values(polyfills).every(polyfill => {
       polyfill.isSupported()
     })
   )
 }
 
 export function isPolyfilled() {
-  return polyfills.every(polyfill => {
+  return Object.values(polyfills).every(polyfill => {
     polyfill.isPolyfilled()
   })
 }
 
 export function apply() {
-  for (const polyfill of polyfills) {
+  for (const polyfill of Object.values(polyfills)) {
     polyfill.apply()
   }
 }
