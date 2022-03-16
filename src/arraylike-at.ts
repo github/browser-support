@@ -1,4 +1,4 @@
-const TypedArray = Reflect.getPrototypeOf(Int8Array) as Int8ArrayConstructor|null
+const TypedArray = Reflect.getPrototypeOf(Int8Array) as Int8ArrayConstructor | null
 
 export function arrayLikeAt<T>(this: ArrayLike<T>, i: number): T | void {
   const l = this.length
