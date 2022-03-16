@@ -1,4 +1,4 @@
-const TypedArrayProto: {at?: typeof arrayLikeAt} = Reflect.getPrototypeOf(Int8Array) || {}
+const TypedArray = Reflect.getPrototypeOf(Int8Array) as Int8ArrayConstructor|null
 
 export function arrayLikeAt<T>(this: ArrayLike<T>, i: number): T | void {
   const l = this.length
@@ -14,14 +14,20 @@ export function isSupported(): boolean {
     typeof Array.prototype.at === 'function' &&
     'at' in String.prototype &&
     typeof String.prototype.at === 'function' &&
-    'at' in TypedArrayProto &&
-    typeof TypedArrayProto.at === 'function'
+    typeof TypedArray === 'function' &&
+    'at' in TypedArray.prototype &&
+    typeof TypedArray.prototype.at === 'function'
   )
 }
 
 /*#__PURE__*/
 export function isPolyfilled(): boolean {
-  return Array.prototype.at === arrayLikeAt && String.prototype.at === arrayLikeAt && TypedArrayProto.at === arrayLikeAt
+  return (
+    Array.prototype.at === arrayLikeAt &&
+    String.prototype.at === arrayLikeAt &&
+    typeof TypedArray === 'function' &&
+    TypedArray.prototype.at === arrayLikeAt
+  )
 }
 
 export function apply(): void {
@@ -29,6 +35,6 @@ export function apply(): void {
     const defn = {value: arrayLikeAt, writable: true, configurable: true}
     Object.defineProperty(Array.prototype, 'at', defn)
     Object.defineProperty(String.prototype, 'at', defn)
-    Object.defineProperty(TypedArrayProto, 'at', defn)
+    Object.defineProperty(TypedArray, 'at', defn)
   }
 }
