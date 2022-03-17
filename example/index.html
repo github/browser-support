@@ -124,18 +124,6 @@
         </tr>
         <tr>
           <th>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">
-              <code>Blob Constructor</code>
-            </a>
-          </th>
-          <td data-code="typeof Blob === 'function'"></td>
-          <td data-supported="true">5+</td>
-          <td data-supported="true">12+</td>
-          <td data-supported="true">4+</td>
-          <td data-supported="true">6+</td>
-        </tr>
-        <tr>
-          <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver">
               <code>PerformanceObserver Constructor</code>
             </a>
@@ -305,6 +293,66 @@
         </tr>
         <tr>
           <th>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData/entries">
+              <code>FormData.entries</code>
+            </a>
+          </th>
+          <td data-code="'entries' in FormData.prototype"></td>
+          <td data-supported="true">50+</td>
+          <td data-supported="true">18+</td>
+          <td data-supported="true">44+</td>
+          <td data-supported="true">11.1+</td>
+        </tr>
+        <tr>
+          <th>
+            <a href="https://developer.mozilla.org/docs/Web/API/Element/toggleAttribute">
+              <code>Element.toggleAttribute</code>
+            </a>
+          </th>
+          <td data-code="'toggleAttribute' in Element.prototype"></td>
+          <td data-supported="true">69+</td>
+          <td data-supported="true">18+</td>
+          <td data-supported="true">63+</td>
+          <td data-supported="true">12+</td>
+        </tr>
+        <tr>
+          <th>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries">
+              <code>Object.fromEntries</code>
+            </a>
+          </th>
+          <td data-code="'fromEntries' in Object"></td>
+          <td data-supported="true">73+</td>
+          <td data-supported="true">79+</td>
+          <td data-supported="true">63+</td>
+          <td data-supported="true">12.1+</td>
+        </tr>
+        <tr>
+          <th>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap">
+              <code>Array.flatMap</code>
+            </a>
+          </th>
+          <td data-code="'flatMap' in Array.prototype"></td>
+          <td data-supported="true">69+</td>
+          <td data-supported="true">79+</td>
+          <td data-supported="true">62+</td>
+          <td data-supported="true">12+</td>
+        </tr>
+        <tr>
+          <th>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd">
+              <code>String.trimEnd</code>
+            </a>
+          </th>
+          <td data-code="'trimEnd' in String.prototype"></td>
+          <td data-supported="true">66+</td>
+          <td data-supported="true">79+</td>
+          <td data-supported="true">61+</td>
+          <td data-supported="true">12+</td>
+        </tr>
+        <tr>
+          <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/abort">
               <code>AbortSignal.abort</code>
             </a>
@@ -342,7 +390,7 @@
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at">
-              <code>Array#at</code>
+              <code>Array.at</code>
             </a>
           </th>
           <td data-polyfill="arrayAt"></td>
@@ -366,7 +414,7 @@
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren">
-              <code>Element#replaceChildren</code>
+              <code>Element.replaceChildren</code>
             </a>
           </th>
           <td data-polyfill="elementReplaceChildren"></td>
@@ -378,7 +426,7 @@
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#add_an_abortable_listener">
-              <code>EventTarget#addEventListener signal</code>
+              <code>EventTarget.addEventListener signal</code>
             </a>
           </th>
           <td data-polyfill="eventAbortSignal"></td>
@@ -413,14 +461,14 @@
         </tr>
         <tr>
           <th>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled">
-              <code>Promise.allSettled</code>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll">
+              <code>String.matchAll</code>
             </a>
           </th>
-          <td data-polyfill="promiseAllSettled"></td>
-          <td data-supported="true">76+</td>
+          <td data-code="'matchAll' in String.prototype"></td>
+          <td data-supported="true">73+</td>
           <td data-supported="true">79+</td>
-          <td data-supported="true">71+</td>
+          <td data-supported="true">67+</td>
           <td data-supported="true">13+</td>
         </tr>
         <tr>
@@ -438,14 +486,26 @@
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll">
-              <code>String#replaceAll</code>
+              <code>String.replaceAll</code>
             </a>
           </th>
           <td data-polyfill="stringReplaceAll"></td>
           <td data-supported="true">85+</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">77+</td>
-          <td data-supported="false">13.1+</td>
+          <td data-supported="true">13.1+</td>
+        </tr>
+        <tr>
+          <th>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any">
+              <code>Promise.any</code>
+            </a>
+          </th>
+          <td data-polyfill="promiseAny"></td>
+          <td data-supported="true">85+</td>
+          <td data-supported="true">85+</td>
+          <td data-supported="true">79+</td>
+          <td data-supported="true">14+</td>
         </tr>
         <tr><th colspan="6">Native Syntax</th></tr>
         <tr>
