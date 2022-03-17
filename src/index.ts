@@ -42,6 +42,14 @@ export const baseSupport =
   // ES2022
   // 'at' in String.prototype && // Polyfilled
   // 'at' in Array.prototype && // Polyfilled
+  // 'hasOwn' in Object && // Polyfilled
+  // ESNext
+  // 'abort' in AbortSignal && // Polyfilled
+  // 'timeout' in AbortSignal && // Polyfilled
+  // typeof AggregateError === 'function' && // Polyfilled
+  // 'randomUUID' in crypto && // Polyfilled
+  // 'replaceChildren' in Element.prototype && // Polyfilled
+  // 'requestIdleCallback' in window && // Polyfilled
   true
 
 export const polyfills = {
