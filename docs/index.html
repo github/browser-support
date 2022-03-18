@@ -49,20 +49,6 @@
     <script type="module" defer>
       import {isSupported, isPolyfilled, baseSupport, apply, polyfills} from '../lib/index.js'
       // import {isSupported, isPolyfilled, apply, poyfills} from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
-      function getBrowser(useragent) {
-        if ('userAgentData' in navigator) {
-          const {brand, version} = Array.from(navigator.userAgentData.brands).pop()
-          return [brand, version]
-        }
-        const parts = useragent.split(' ')
-        let [name, version] = parts.pop().split('/')
-        if (name === 'Safari') {
-          version = parts.pop().split('/').pop()
-        }
-        return [name, version]
-      }
-      const [browser, version] = getBrowser(navigator.userAgent)
-      document.getElementById('your-browser').innerText = browser + " " + version
       for(const el of document.querySelectorAll('[data-code]')) {
         let supported = false
         const code = el.getAttribute('data-code')
@@ -664,5 +650,21 @@
         ** This feature is used, but we Transpile it to a compatible syntax.
       </small>
     </p>
+    <script>
+      function getBrowser(useragent) {
+        if ('userAgentData' in navigator) {
+          const {brand, version} = Array.from(navigator.userAgentData.brands).pop()
+          return [brand, version]
+        }
+        const parts = useragent.split(' ')
+        let [name, version] = parts.pop().split('/')
+        if (name === 'Safari') {
+          version = parts.pop().split('/').pop()
+        }
+        return [name, version]
+      }
+      const [browser, version] = getBrowser(navigator.userAgent)
+      document.getElementById('your-browser').innerText = browser + " " + version
+    </script>
   </body>
 </html>
