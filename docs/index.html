@@ -46,41 +46,6 @@
         background-color: grey;
       }
     </style>
-    <script type="module" defer>
-      import {isSupported, isPolyfilled, baseSupport, apply, polyfills} from '../lib/index.js'
-      // import {isSupported, isPolyfilled, apply, poyfills} from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
-      for(const el of document.querySelectorAll('[data-code]')) {
-        let supported = false
-        const code = el.getAttribute('data-code')
-        try {
-          if (code === "isSupported()") {
-            supported = isSupported()
-          } else if (code === "baseSupport") {
-            supported = baseSupport
-          } else if (code === "isPolyfilled()") {
-            supported = isPolyfilled()
-          } else {
-            supported = eval(`${code}`)
-          }
-        } catch (e) {
-
-        }
-        Promise.resolve(supported).then((value) => {
-          el.setAttribute('data-supported', Boolean(value))
-          if (!value && el.hasAttribute('data-transpiled')) {
-            if (!value) el.textContent = '**'
-          }
-        })
-      }
-      for(const el of document.querySelectorAll('[data-polyfill]')) {
-        const name = el.getAttribute('data-polyfill') || ''
-        if (!(name in polyfills)) continue
-        Promise.resolve(polyfills[name].isSupported()).then((value) => {
-          el.setAttribute('data-supported', Boolean(value))
-          if (!value) el.textContent = '*'
-        })
-      }
-    </script>
   </head>
   <body>
     <table>
@@ -679,6 +644,49 @@
           el.setAttribute('data-supported', Boolean(value))
           if (!value && el.hasAttribute('data-transpiled')) {
             if (!value) el.textContent = '**'
+          } else if (!value && el.hasAttribute('data-polyfilled')) {
+            if (!value) el.textContent = '*'
+          }
+        })
+      }
+    </script>
+    <script type="module">
+      import * as support from '../lib/index.js'
+      // import * as support from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
+      const polyfills = support.polyfills
+      for(const el of document.querySelectorAll('[data-export]')) {
+        let supported = false
+        const key = el.getAttribute('data-export')
+        if (key in support && typeof support[key] === 'function') {
+          supported = Boolean(support[key]())
+        } else if (key in support) {
+          supported = Boolean(support[key])
+        } else {
+          supported = false
+        }
+        Promise.resolve(supported).then((value) => {
+          el.setAttribute('data-supported', Boolean(value))
+          if (!value && el.hasAttribute('data-transpiled')) {
+            if (!value) el.textContent = '**'
+          } else if (!value && el.hasAttribute('data-polyfilled')) {
+            if (!value) el.textContent = '*'
+          }
+        })
+      }
+      for(const el of document.querySelectorAll('[data-polyfill]')) {
+        let supported = false
+        const name = el.getAttribute('data-polyfill') || ''
+        if (name in polyfills) {
+          supported = polyfills[name].isSupported()
+        } else {
+          supported = false
+        }
+        Promise.resolve(supported).then((value) => {
+          el.setAttribute('data-supported', Boolean(value))
+          if (!value && el.hasAttribute('data-transpiled')) {
+            if (!value) el.textContent = '**'
+          } else if (!value && el.hasAttribute('data-polyfilled')) {
+            if (!value) el.textContent = '*'
           }
         })
       }
