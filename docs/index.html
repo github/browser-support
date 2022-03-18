@@ -666,5 +666,22 @@
       const [browser, version] = getBrowser(navigator.userAgent)
       document.getElementById('your-browser').innerText = browser + " " + version
     </script>
+    <script>
+      for(const el of document.querySelectorAll('[data-code]')) {
+        let supported = false
+        const code = el.getAttribute('data-code')
+        try {
+          supported = eval(`${code}`)
+        } catch (e) {
+          supported = false
+        }
+        Promise.resolve(supported).then((value) => {
+          el.setAttribute('data-supported', Boolean(value))
+          if (!value && el.hasAttribute('data-transpiled')) {
+            if (!value) el.textContent = '**'
+          }
+        })
+      }
+    </script>
   </body>
 </html>
