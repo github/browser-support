@@ -739,8 +739,8 @@
       }
     </script>
     <script type="module">
-      import * as support from '../lib/index.js'
-      // import * as support from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
+      // import * as support from '../lib/index.js'
+      import * as support from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
       const polyfills = support.polyfills
       for(const el of document.querySelectorAll('[data-export]')) {
         let supported = false
