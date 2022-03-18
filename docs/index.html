@@ -33,10 +33,10 @@
       td[data-supported="false"] {
         background-color: red;
       }
-      td[data-polyfill][data-supported="false"],
-      td[data-polyfill] ~ [data-supported="false"],
-      td[data-transpiled][data-supported="false"],
-      td[data-transpiled] ~ [data-supported="false"]
+      tr[data-polyfills] ~ tr td[data-polyfill] ~ [data-supported="false"],
+      tr[data-polyfills] ~ tr td[data-polyfill][data-supported="false"],
+      tr[data-transpiled] ~ tr td[data-code] ~ [data-supported="false"],
+      tr[data-transpiled] ~ tr td[data-code][data-supported="false"]
       {
         background-color: lightseagreen;
       }
@@ -350,7 +350,7 @@
               <code>AbortSignal.abort</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="abortSignalAbort"></td>
+          <td data-polyfill="abortSignalAbort">*</td>
           <td data-supported="true">93+</td>
           <td data-supported="true">93+</td>
           <td data-supported="true">88+</td>
@@ -364,7 +364,7 @@
               <code>AbortSignal.timeout</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="abortSignalAbort"></td>
+          <td data-polyfill="abortSignalTimeout">*</td>
           <td data-supported="false">*</td>
           <td data-supported="false">*</td>
           <td data-supported="false">*</td>
@@ -378,7 +378,7 @@
               <code>AggregateError</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="aggregateError"></td>
+          <td data-polyfill="aggregateError">*</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">79+</td>
@@ -392,7 +392,7 @@
               <code>Array.at</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="arrayAt"></td>
+          <td data-polyfill="arrayAt">*</td>
           <td data-supported="true">92+</td>
           <td data-supported="true">92+</td>
           <td data-supported="true">90+</td>
@@ -406,7 +406,7 @@
               <code>Crypto.randomUUID</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="cryptoRandomUUID"></td>
+          <td data-polyfill="cryptoRandomUUID">*</td>
           <td data-supported="true">92+</td>
           <td data-supported="true">92+</td>
           <td data-supported="true">95+</td>
@@ -420,7 +420,7 @@
               <code>Element.replaceChildren</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="elementReplaceChildren"></td>
+          <td data-polyfill="elementReplaceChildren">*</td>
           <td data-supported="true">86+</td>
           <td data-supported="true">86+</td>
           <td data-supported="true">78+</td>
@@ -434,7 +434,7 @@
               <code>EventTarget.addEventListener signal</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="eventAbortSignal"></td>
+          <td data-polyfill="eventAbortSignal">*</td>
           <td data-supported="true">90+</td>
           <td data-supported="true">90+</td>
           <td data-supported="true">86+</td>
@@ -448,7 +448,7 @@
               <code>Object.hasOwn</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="objectHasOwn"></td>
+          <td data-polyfill="objectHasOwn">*</td>
           <td data-supported="true">93+</td>
           <td data-supported="true">93+</td>
           <td data-supported="true">92+</td>
@@ -462,23 +462,13 @@
               <code>Promise.allSettled</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="promiseAllSettled"></td>
+          <td data-polyfill="promiseAllSettled">*</td>
           <td data-supported="true">76+</td>
           <td data-supported="true">79+</td>
           <td data-supported="true">71+</td>
           <td data-supported="true">13+</td>
-        </tr>
-        <tr>
-          <th>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll">
-              <code>String.matchAll</code>
-            </a>
-          </th>
-          <td data-code="'matchAll' in String.prototype"></td>
-          <td data-supported="true">73+</td>
-          <td data-supported="true">79+</td>
-          <td data-supported="true">67+</td>
-          <td data-supported="true">13+</td>
+          <td data-supported="true">63+</td>
+          <td data-supported="true">12.0+</td>
         </tr>
         <tr>
           <th>
@@ -486,7 +476,7 @@
               <code>requestIdleCallback</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="promiseAllSettled"></td>
+          <td data-polyfill="requestIdleCallback">*</td>
           <td data-supported="true">47+</td>
           <td data-supported="true">79+</td>
           <td data-supported="true">55+</td>
@@ -500,7 +490,7 @@
               <code>String.replaceAll</code>
             </a>
           </th>
-          <td data-polyfilled data-polyfill="stringReplaceAll"></td>
+          <td data-polyfill="stringReplaceAll">*</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">77+</td>
@@ -514,13 +504,15 @@
               <code>Promise.any</code>
             </a>
           </th>
-          <td data-polyfill="promiseAny"></td>
+          <td data-polyfill="promiseAny">*</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">79+</td>
           <td data-supported="true">14+</td>
+          <td data-supported="false">*</td>
+          <td data-supported="true">14.0+</td>
         </tr>
-        <tr><th colspan="6">Native Syntax</th></tr>
+        <tr><th colspan="8">Native Syntax</th></tr>
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges#using_named_groups">
@@ -591,13 +583,14 @@
           <td data-supported="true">53+</td>
           <td data-supported="true">9.0+</td>
         </tr>
+        <tr data-transpiled><th colspan="8">Transpiled Native Syntax</th></tr>
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining">
               <code>Optional Chaining Operator (?.)</code>
             </a>
           </th>
-          <td data-code="window?.foo?.bar?.baz || true" data-transpiled></td>
+          <td data-code="window?.foo?.bar?.baz || true">**</td>
           <td data-supported="true">80+</td>
           <td data-supported="true">80+</td>
           <td data-supported="true">74+</td>
@@ -611,7 +604,7 @@
               <code>Nullish Coalescing Operator (??)</code>
             </a>
           </th>
-          <td data-code="window.foo ?? true" data-transpiled></td>
+          <td data-code="window.foo ?? true">**</td>
           <td data-supported="true">80+</td>
           <td data-supported="true">80+</td>
           <td data-supported="true">72+</td>
@@ -625,7 +618,7 @@
               <code>Logical Nullish Assignment (??=)</code>
             </a>
           </th>
-          <td data-code="let x; x ??= 1" data-transpiled></td>
+          <td data-code="let x; x ??= 1">**</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">85+</td>
           <td data-supported="true">79+</td>
@@ -636,10 +629,10 @@
         <tr>
           <th>
             <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields#public_instance_fields">
-              <code>Public Instance Class Fields</code>
+              <code>Public Class Fields</code>
             </a>
           </th>
-          <td data-code="class A{a=true};new A().a" data-transpiled></td>
+          <td data-code="class A{a=true};new A().a">**</td>
           <td data-supported="true">72+</td>
           <td data-supported="true">79+</td>
           <td data-supported="true">69+</td>
@@ -653,7 +646,7 @@
               <code>Private Class Fields</code>
             </a>
           </th>
-          <td data-code="class A{#a=true;get a(){return this.#a}};new A().a" data-transpiled></td>
+          <td data-code="class A{#a=true;get a(){return this.#a}};new A().a">**</td>
           <td data-supported="true">74+</td>
           <td data-supported="true">79+</td>
           <td data-supported="true">90+</td>
@@ -667,7 +660,7 @@
               <code>Static Class Blocks</code>
             </a>
           </th>
-          <td data-code="class A{static{this.a=true}};A.a" data-transpiled></td>
+          <td data-code="class A{static{this.a=true}};A.a">**</td>
           <td data-supported="true">94+</td>
           <td data-supported="true">94+</td>
           <td data-supported="true">93+</td>
@@ -681,7 +674,7 @@
               <code>Decorators</code>
             </a>
           </th>
-          <td data-code="function foo(cls){cls.a=true}@foo class A{};A.a" data-transpiled></td>
+          <td data-code="function foo(cls){cls.a=true}@foo class A{};A.a">**</td>
           <td data-supported="false">**</td>
           <td data-supported="false">**</td>
           <td data-supported="false">**</td>
@@ -698,7 +691,7 @@
     </p>
     <p>
       <small>
-        ** This feature is used, but we Transpile it to a compatible syntax.
+        ** Not supported natively, but transpiled to a compatible syntax.
       </small>
     </p>
     <script>
@@ -728,11 +721,6 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
-          if (!value && el.hasAttribute('data-transpiled')) {
-            if (!value) el.textContent = '**'
-          } else if (!value && el.hasAttribute('data-polyfilled')) {
-            if (!value) el.textContent = '*'
-          }
         })
       }
     </script>
@@ -752,11 +740,6 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
-          if (!value && el.hasAttribute('data-transpiled')) {
-            if (!value) el.textContent = '**'
-          } else if (!value && el.hasAttribute('data-polyfilled')) {
-            if (!value) el.textContent = '*'
-          }
         })
       }
       for(const el of document.querySelectorAll('[data-polyfill]')) {
@@ -769,11 +752,6 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
-          if (!value && el.hasAttribute('data-transpiled')) {
-            if (!value) el.textContent = '**'
-          } else if (!value && el.hasAttribute('data-polyfilled')) {
-            if (!value) el.textContent = '*'
-          }
         })
       }
     </script>
