@@ -1,10 +1,10 @@
 # browser-support
 
-Polyfills for small new features, plus functions to determine browser feature support.
+This library allows websites to maintain compatibility with older browsers, which do not implement newer features. It does so using [polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill) for small new features, plus functions to determine if a browser supports a set of features natively or with polyfills.
 
 ### How is this used on GitHub?
 
-We use all of these polyfills on GitHub.com. We also use the `isSupported()` function to determine if the browser is well supported, unsupported browsers do not send errors or statistics to our backend monitoring.
+We use all of these polyfills on GitHub.com. We also use the `isSupported()` function to determine if the browser meets a minimum set of functionality which we expect, browser that return false from `isSupported()` do not send errors or statistics to our backend monitoring.
 
 ## Installation
 
