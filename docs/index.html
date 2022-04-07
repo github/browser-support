@@ -7,6 +7,8 @@
     <style>
       html {
         font-family: "Alliance No.1", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-weight: 400;
+        line-height: 28px;
       }
       .container {
         font-size: 14px;
@@ -23,11 +25,32 @@
         line-height: 52px;
         margin-bottom: 16px;
       }
-      p {
-        font-weight: 400;
+      p, summary {
         color: #627597;
         font-size: 20px;
-        line-height: 28px;
+      }
+      caption {
+        margin-bottom: 14px;
+        text-align: left;
+      }
+      caption p {
+        font-size: 14px;
+        line-height: 20px;
+        margin: 5px 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+      }
+      caption p span {
+        content: ' ';
+        display: inline-block;
+        text-align: center;
+        padding-top: 2px;
+        border-radius: 3px;
+        background: #dafbe1;
+        height: 18px;
+        width: 25px;
+        margin: 0 5px;
       }
       table {
         border-collapse: collapse;
@@ -78,19 +101,24 @@
         justify-content: center;
         align-items: center;
       }
-      td[data-supported="true"] div {
+      td[data-supported="true"] div, caption p span {
         background-color: #dafbe1;
         color: #24292f;
+        font-weight: bold;
       }
-      td[data-supported="false"] div {
+      td[data-supported="false"] div, caption p span.unsupported {
         background-color: #cf222e;
+        color: white;
+        font-weight: bold;
       }
       tr[data-polyfills] ~ tr td[data-polyfill] ~ [data-supported="false"] div,
       tr[data-polyfills] ~ tr td[data-polyfill][data-supported="false"] div,
       tr[data-transpiled] ~ tr td[data-code] ~ [data-supported="false"] div,
-      tr[data-transpiled] ~ tr td[data-code][data-supported="false"] div
-      {
+      tr[data-transpiled] ~ tr td[data-code][data-supported="false"] div,
+      caption p span.polyfilled,
+      caption p span.transpiled {
         background-color: #ddf4ff;
+        color: #24292f;
       }
       td[data-code]:not([data-supported]) div,
       td[data-polyfill]:not([data-supported]) div
@@ -116,6 +144,20 @@
       <h1>GitHub Feature Support Table</h1>
       <p>The table below details some of the client-side ECMAScript features we use to provide the largest and most advanced development platform in the world.</p>
       <table>
+        <caption>
+          <details open>
+            <summary>Key</summary>
+            <p>
+              <span></span>Required feature available in this browser.
+            </p><p>
+              <span class="unsupported">!</span>Required feature, not available in this browser.
+            </p><p>
+              <span class="polyfilled">*</span>Not avaible in this browser, but polyfilled using this library.
+            </p><p>
+              <span class="transpiled">**</span>Not available in this browser, but transpiled to a compatible syntax.
+            </p>
+          </details>
+        </caption>
         <thead>
           <tr>
             <th></th>
@@ -136,7 +178,7 @@
                 <code>Blob Constructor</code>
               </a>
             </th>
-            <td data-code="typeof Blob === 'function'"><div></div></td>
+            <td data-code="typeof Blob === 'function'"><div>!</div></td>
             <td data-supported="true"><div>5+</div></td>
             <td data-supported="true"><div>12+</div></td>
             <td data-supported="true"><div>4+</div></td>
@@ -150,7 +192,7 @@
                 <code>PerformanceObserver Constructor</code>
               </a>
             </th>
-            <td data-code="typeof PerformanceObserver === 'function'"><div></div></td>
+            <td data-code="typeof PerformanceObserver === 'function'"><div>!</div></td>
             <td data-supported="true"><div>52+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>57+</div></td>
@@ -164,7 +206,7 @@
                 <code>Intl Constructor</code>
               </a>
             </th>
-            <td data-code="typeof Intl === 'object'"><div></div></td>
+            <td data-code="typeof Intl === 'object'"><div>!</div></td>
             <td data-supported="true"><div>24+</div></td>
             <td data-supported="true"><div>12+</div></td>
             <td data-supported="true"><div>29+</div></td>
@@ -178,7 +220,7 @@
                 <code>MutationObserver Constructor</code>
               </a>
             </th>
-            <td data-code="typeof MutationObserver === 'function'"><div></div></td>
+            <td data-code="typeof MutationObserver === 'function'"><div>!</div></td>
             <td data-supported="true"><div>26+</div></td>
             <td data-supported="true"><div>12+</div></td>
             <td data-supported="true"><div>14+</div></td>
@@ -192,7 +234,7 @@
                 <code>URLSearchParams Constructor</code>
               </a>
             </th>
-            <td data-code="typeof URLSearchParams === 'function'"><div></div></td>
+            <td data-code="typeof URLSearchParams === 'function'"><div>!</div></td>
             <td data-supported="true"><div>49+</div></td>
             <td data-supported="true"><div>17+</div></td>
             <td data-supported="true"><div>29+</div></td>
@@ -206,7 +248,7 @@
                 <code>WebSocket Constructor</code>
               </a>
             </th>
-            <td data-code="typeof WebSocket === 'function'"><div></div></td>
+            <td data-code="typeof WebSocket === 'function'"><div>!</div></td>
             <td data-supported="true"><div>4+</div></td>
             <td data-supported="true"><div>12+</div></td>
             <td data-supported="true"><div>11+</div></td>
@@ -220,7 +262,7 @@
                 <code>IntersectionObserver Constructor</code>
               </a>
             </th>
-            <td data-code="typeof IntersectionObserver === 'function'"><div></div></td>
+            <td data-code="typeof IntersectionObserver === 'function'"><div>!</div></td>
             <td data-supported="true"><div>51+</div></td>
             <td data-supported="true"><div>15+</div></td>
             <td data-supported="true"><div>55+</div></td>
@@ -234,7 +276,7 @@
                 <code>queueMicrotask Function</code>
               </a>
             </th>
-            <td data-code="typeof queueMicrotask === 'function'"><div></div></td>
+            <td data-code="typeof queueMicrotask === 'function'"><div>!</div></td>
             <td data-supported="true"><div>71+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>69+</div></td>
@@ -248,7 +290,7 @@
                 <code>TextEncoder Constructor</code>
               </a>
             </th>
-            <td data-code="typeof TextEncoder === 'function'"><div></div></td>
+            <td data-code="typeof TextEncoder === 'function'"><div>!</div></td>
             <td data-supported="true"><div>38+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>18+</div></td>
@@ -262,7 +304,7 @@
                 <code>TextDecoder Constructor</code>
               </a>
             </th>
-            <td data-code="typeof TextDecoder === 'function'"><div></div></td>
+            <td data-code="typeof TextDecoder === 'function'"><div>!</div></td>
             <td data-supported="true"><div>38+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>19+</div></td>
@@ -276,7 +318,7 @@
                 <code>customElements</code>
               </a>
             </th>
-            <td data-code="typeof customElements === 'object'"><div></div></td>
+            <td data-code="typeof customElements === 'object'"><div>!</div></td>
             <td data-supported="true"><div>54+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>63+</div></td>
@@ -290,7 +332,7 @@
                 <code>HTMLDetailsElement Constructor</code>
               </a>
             </th>
-            <td data-code="typeof HTMLDetailsElement === 'function'"><div></div></td>
+            <td data-code="typeof HTMLDetailsElement === 'function'"><div>!</div></td>
             <td data-supported="true"><div>10+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>49+</div></td>
@@ -304,7 +346,7 @@
                 <code>AbortController Constructor</code>
               </a>
             </th>
-            <td data-code="typeof AbortController === 'function'"><div></div></td>
+            <td data-code="typeof AbortController === 'function'"><div>!</div></td>
             <td data-supported="true"><div>66+</div></td>
             <td data-supported="true"><div>16+</div></td>
             <td data-supported="true"><div>57+</div></td>
@@ -318,7 +360,7 @@
                 <code>AbortSignal Constructor</code>
               </a>
             </th>
-            <td data-code="typeof AbortSignal === 'function'"><div></div></td>
+            <td data-code="typeof AbortSignal === 'function'"><div>!</div></td>
             <td data-supported="true"><div>66+</div></td>
             <td data-supported="true"><div>16+</div></td>
             <td data-supported="true"><div>57+</div></td>
@@ -332,7 +374,7 @@
                 <code>globalThis Object</code>
               </a>
             </th>
-            <td data-code="typeof globalThis === 'object'"><div></div></td>
+            <td data-code="typeof globalThis === 'object'"><div>!</div></td>
             <td data-supported="true"><div>71+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>65+</div></td>
@@ -346,7 +388,7 @@
                 <code>FormData.entries</code>
               </a>
             </th>
-            <td data-code="'entries' in FormData.prototype"><div></div></td>
+            <td data-code="'entries' in FormData.prototype"><div>!</div></td>
             <td data-supported="true"><div>50+</div></td>
             <td data-supported="true"><div>18+</div></td>
             <td data-supported="true"><div>44+</div></td>
@@ -360,7 +402,7 @@
                 <code>Element.toggleAttribute</code>
               </a>
             </th>
-            <td data-code="'toggleAttribute' in Element.prototype"><div></div></td>
+            <td data-code="'toggleAttribute' in Element.prototype"><div>!</div></td>
             <td data-supported="true"><div>69+</div></td>
             <td data-supported="true"><div>18+</div></td>
             <td data-supported="true"><div>63+</div></td>
@@ -374,7 +416,7 @@
                 <code>Object.fromEntries</code>
               </a>
             </th>
-            <td data-code="'fromEntries' in Object"><div></div></td>
+            <td data-code="'fromEntries' in Object"><div>!</div></td>
             <td data-supported="true"><div>73+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>63+</div></td>
@@ -388,7 +430,7 @@
                 <code>Array.flatMap</code>
               </a>
             </th>
-            <td data-code="'flatMap' in Array.prototype"><div></div></td>
+            <td data-code="'flatMap' in Array.prototype"><div>!</div></td>
             <td data-supported="true"><div>69+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>62+</div></td>
@@ -402,7 +444,7 @@
                 <code>String.trimEnd</code>
               </a>
             </th>
-            <td data-code="'trimEnd' in String.prototype"><div></div></td>
+            <td data-code="'trimEnd' in String.prototype"><div>!</div></td>
             <td data-supported="true"><div>66+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>61+</div></td>
@@ -416,7 +458,7 @@
                 <code>String.matchAll</code>
               </a>
             </th>
-            <td data-code="'matchAll' in String.prototype"><div></div></td>
+            <td data-code="'matchAll' in String.prototype"><div>!</div></td>
             <td data-supported="true"><div>73+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>67+</div></td>
@@ -600,7 +642,7 @@
                 <code>Exponentiation Operator</code>
               </a>
             </th>
-            <td data-code="1 ** 1"><div></div></td>
+            <td data-code="1 ** 1"><div>!</div></td>
             <td data-supported="true"><div>52+</div></td>
             <td data-supported="true"><div>14+</div></td>
             <td data-supported="true"><div>52+</div></td>
@@ -614,7 +656,7 @@
                 <code>Object Rest/Spead</code>
               </a>
             </th>
-            <td data-code="var {a, ...rest} = { ...{ b: 2 }, a: 1 }; rest.b + a === 3"><div></div></td>
+            <td data-code="var {a, ...rest} = { ...{ b: 2 }, a: 1 }; rest.b + a === 3"><div>!</div></td>
             <td data-supported="true"><div>60+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>55+</div></td>
@@ -628,7 +670,7 @@
                 <code>RegExp Named Capture Groups</code>
               </a>
             </th>
-            <td data-code="/(?<a>a)/.exec('a').groups.a === 'a'"><div></div></td>
+            <td data-code="/(?<a>a)/.exec('a').groups.a === 'a'"><div>!</div></td>
             <td data-supported="true"><div>64+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>78+</div></td>
@@ -642,7 +684,7 @@
                 <code>Async Generators & for await</code>
               </a>
             </th>
-            <td data-code="(async function(){async function*iter(){ yield 1 }let c=0;for await(const i of iter()) { c+= i};return c===1})()"><div></div></td>
+            <td data-code="(async function(){async function*iter(){ yield 1 }let c=0;for await(const i of iter()) { c+= i};return c===1})()"><div>!</div></td>
             <td data-supported="true"><div>63+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>57+</div></td>
@@ -656,7 +698,7 @@
                 <code>Optional Catch Binding</code>
               </a>
             </th>
-            <td data-code="try{}catch{};true"><div></div></td>
+            <td data-code="try{}catch{};true"><div>!</div></td>
             <td data-supported="true"><div>66+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>58+</div></td>
@@ -765,16 +807,6 @@
           </tr>
         </tbody>
       </table>
-      <p>
-        <small>
-          * Not supported natively, but polyfilled using this library.
-        </small>
-      </p>
-      <p>
-        <small>
-          ** Not supported natively, but transpiled to a compatible syntax.
-        </small>
-      </p>
     </div>
     <script>
       function getBrowser(useragent) {
@@ -803,6 +835,7 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
+          if (value) el.querySelector('div').textContent = ''
         })
       }
     </script>
@@ -834,6 +867,7 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
+          if (value) el.querySelector('div').textContent = ''
         })
       }
     </script>
