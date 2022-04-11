@@ -855,6 +855,7 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
+          if (value) el.querySelector('div').textContent = ''
         })
       }
       for(const el of document.querySelectorAll('[data-polyfill]')) {
