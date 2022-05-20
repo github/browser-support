@@ -5,6 +5,7 @@ import * as arrayAt from './arraylike-at.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
+import * as formRequestSubmit from './form-requestsubmit.js'
 import * as objectHasOwn from './object-hasown.js'
 import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
@@ -60,6 +61,7 @@ export const polyfills = {
   cryptoRandomUUID,
   elementReplaceChildren,
   eventAbortSignal,
+  formRequestSubmit,
   objectHasOwn,
   promiseAllSettled,
   promiseAny,
