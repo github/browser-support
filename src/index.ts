@@ -2,9 +2,11 @@ import * as abortSignalAbort from './abortsignal-abort.js'
 import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as aggregateError from './aggregateerror.js'
 import * as arrayAt from './arraylike-at.js'
+import * as clipboardItem from './clipboarditem.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
+import * as navigatorClipboard from './navigator-clipboard.js'
 import * as objectHasOwn from './object-hasown.js'
 import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
@@ -57,9 +59,11 @@ export const polyfills = {
   abortSignalTimeout,
   aggregateError,
   arrayAt,
+  clipboardItem,
   cryptoRandomUUID,
   elementReplaceChildren,
   eventAbortSignal,
+  navigatorClipboard,
   objectHasOwn,
   promiseAllSettled,
   promiseAny,

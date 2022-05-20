@@ -18,7 +18,8 @@
       },
       "globals": {
         "chai": false,
-        "expect": false
+        "expect": false,
+        "globalThis": false
       },
       "env": {
         "mocha": true
