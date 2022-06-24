@@ -47,6 +47,6 @@
     "karma-mocha-reporter": "^2.2.5",
     "mocha": "^9.2.0",
     "tslib": "^2.1.0",
-    "typescript": "^4.2.2"
+    "typescript": "^4.7.4"
   }
 }
