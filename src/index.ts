@@ -70,18 +70,11 @@ export const polyfills = {
 }
 
 export function isSupported() {
-  return (
-    baseSupport &&
-    Object.values(polyfills).every(polyfill => {
-      polyfill.isSupported()
-    })
-  )
+  return baseSupport && Object.values(polyfills).every(polyfill => polyfill.isSupported())
 }
 
 export function isPolyfilled() {
-  return Object.values(polyfills).every(polyfill => {
-    polyfill.isPolyfilled()
-  })
+  return Object.values(polyfills).every(polyfill => polyfill.isPolyfilled())
 }
 
 export function apply() {
