@@ -2,10 +2,7 @@ type ClipboardItems = Record<string, string | Blob | PromiseLike<string | Blob>>
 const records = new WeakMap<ClipboardItem, ClipboardItems>()
 const presentationStyles = new WeakMap<ClipboardItem, PresentationStyle>()
 export class ClipboardItem {
-  constructor(
-    items: ClipboardItems,
-    options: ClipboardItemOptions | undefined = {}
-  ) {
+  constructor(items: ClipboardItems, options: ClipboardItemOptions | undefined = {}) {
     if (Object.keys(items).length === 0) throw new TypeError('Empty dictionary argument')
     records.set(this, items)
     presentationStyles.set(this, options.presentationStyle || 'unspecified')
