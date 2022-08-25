@@ -7,6 +7,7 @@ import * as cryptoRandomUUID from './crypto-randomuuid.js'
 import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
+import * as formRequestSubmit from './form-requestsubmit.js'
 import * as objectHasOwn from './object-hasown.js'
 import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
@@ -64,6 +65,7 @@ export const polyfills = {
   elementReplaceChildren,
   eventAbortSignal,
   navigatorClipboard,
+  formRequestSubmit,
   objectHasOwn,
   promiseAllSettled,
   promiseAny,
@@ -72,18 +74,11 @@ export const polyfills = {
 }
 
 export function isSupported() {
-  return (
-    baseSupport &&
-    Object.values(polyfills).every(polyfill => {
-      polyfill.isSupported()
-    })
-  )
+  return baseSupport && Object.values(polyfills).every(polyfill => polyfill.isSupported())
 }
 
 export function isPolyfilled() {
-  return Object.values(polyfills).every(polyfill => {
-    polyfill.isPolyfilled()
-  })
+  return Object.values(polyfills).every(polyfill => polyfill.isPolyfilled())
 }
 
 export function apply() {

@@ -1,6 +1,6 @@
 export class AggregateError extends Error {
   declare errors: unknown[]
-  declare cause: unknown
+  declare cause: Error | undefined
 
   constructor(errors: unknown[], message: string, options: {cause?: unknown} = {}) {
     super(message)

@@ -486,14 +486,14 @@
           </tr>
           <tr>
             <th>
-              <a href="https://chromestatus.com/feature/5768400507764736">
+              <a href="https://developer.mozilla.org/docs/Web/API/AbortSignal/timeout">
                 <code>AbortSignal.timeout</code>
               </a>
             </th>
             <td data-polyfill="abortSignalTimeout"><div>*</div></td>
             <td data-supported="false"><div>*</div></td>
             <td data-supported="false"><div>*</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>100+</div></td>
             <td data-supported="false"><div>*</div></td>
             <td data-supported="false"><div>*</div></td>
             <td data-supported="false"><div>*</div></td>
@@ -595,6 +595,20 @@
             <td data-supported="true"><div>13.1+</div></td>
             <td data-supported="true"><div>63+ †</div></td>
             <td data-supported="true"><div>12.0+ †</div></td>
+          </tr>
+          <tr>
+            <th>
+              <a href="https://developer.mozilla.org/docs/Web/API/HTMLFormElement/requestSubmit">
+                <code>HTMLFormElement.requestSubmit</code>
+              </a>
+            </th>
+            <td data-polyfill="formRequestSubmit"><div>*</div></td>
+            <td data-supported="true"><div>76+</div></td>
+            <td data-supported="true"><div>79+</div></td>
+            <td data-supported="true"><div>75+</div></td>
+            <td data-supported="false"<div>*</div></td>
+            <td data-supported="true"><div>63+</div></td>
+            <td data-supported="true"><div>12.0+</div></td>
           </tr>
           <tr>
             <th>
@@ -737,14 +751,13 @@
             <td data-supported="true"><div>53+</div></td>
             <td data-supported="true"><div>9.0+</div></td>
           </tr>
-          <tr data-transpiled><th></th><th colspan="7"><h3>Transpiled Native Syntax</h3></th></tr>
           <tr>
             <th>
               <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining">
                 <code>Optional Chaining Operator (?.)</code>
               </a>
             </th>
-            <td data-code="window?.foo?.bar?.baz || true"><div>**</div></td>
+            <td data-code="window?.foo?.bar?.baz || true"><div>!</div></td>
             <td data-supported="true"><div>80+</div></td>
             <td data-supported="true"><div>80+</div></td>
             <td data-supported="true"><div>74+</div></td>
@@ -758,7 +771,7 @@
                 <code>Nullish Coalescing Operator (??)</code>
               </a>
             </th>
-            <td data-code="window.foo ?? true"><div>**</div></td>
+            <td data-code="window.foo ?? true"><div>!</div></td>
             <td data-supported="true"><div>80+</div></td>
             <td data-supported="true"><div>80+</div></td>
             <td data-supported="true"><div>72+</div></td>
@@ -766,6 +779,7 @@
             <td data-supported="true"><div>67+</div></td>
             <td data-supported="true"><div>13.0+</div></td>
           </tr>
+          <tr data-transpiled><th></th><th colspan="7"><h3>Transpiled Native Syntax</h3></th></tr>
           <tr>
             <th>
               <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment">
@@ -886,6 +900,7 @@
         }
         Promise.resolve(supported).then((value) => {
           el.setAttribute('data-supported', Boolean(value))
+          if (value) el.querySelector('div').textContent = ''
         })
       }
       for(const el of document.querySelectorAll('[data-polyfill]')) {
