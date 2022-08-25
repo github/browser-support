@@ -1,8 +1,9 @@
-const records = new WeakMap<ClipboardItem, Record<string, ClipboardItemDataType | PromiseLike<ClipboardItemDataType>>>()
+
+const records = new WeakMap<ClipboardItem, Record<string, ClipboardItemData | PromiseLike<ClipboardItemData>>>()
 const presentationStyles = new WeakMap<ClipboardItem, PresentationStyle>()
 export class ClipboardItem {
   constructor(
-    items: Record<string, ClipboardItemDataType | PromiseLike<ClipboardItemDataType>>,
+    items: Record<string, ClipboardItemData | PromiseLike<ClipboardItemData>>,
     options: ClipboardItemOptions | undefined = {}
   ) {
     if (Object.keys(items).length === 0) throw new TypeError('Empty dictionary argument')
