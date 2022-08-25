@@ -116,6 +116,7 @@
       tr[data-transpiled] ~ tr td[data-code] ~ [data-supported="false"] div,
       tr[data-transpiled] ~ tr td[data-code][data-supported="false"] div,
       caption p span.polyfilled,
+      caption p span.buggy,
       caption p span.transpiled {
         background-color: #ddf4ff;
         color: #24292f;
@@ -153,6 +154,8 @@
               <span class="unsupported">!</span>Required feature, not available in this browser.
             </p><p>
               <span class="polyfilled">*</span>Not avaible in this browser, but polyfilled using this library.
+            </p><p>
+              <span class="buggy"><small>†</small></span>Required feature, but polyfilled to smooth over bugs in this browser.
             </p><p>
               <span class="transpiled">**</span>Not available in this browser, but transpiled to a compatible syntax.
             </p>
@@ -525,6 +528,20 @@
           </tr>
           <tr>
             <th>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/ClipboardItem">
+                <code>ClipboardItem</code>
+              </a>
+            </th>
+            <td data-polyfill="clipboardItem"><div>*</div></td>
+            <td data-supported="true" title="Buggy implementation"><div>66+ †</div></td>
+            <td data-supported="true" title="Buggy implementation"><div>79+ †</div></td>
+            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>13.1+</div></td>
+            <td data-supported="true" title="Buggy implementation"><div>53+ †</div></td>
+            <td data-supported="true" title="Buggy implementation"><div>9.0+ †</div></td>
+          </tr>
+          <tr>
+            <th>
               <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID">
                 <code>Crypto.randomUUID</code>
               </a>
@@ -564,6 +581,20 @@
             <td data-supported="true"><div>15+</div></td>
             <td data-supported="true"><div>76+</div></td>
             <td data-supported="true"><div>15.0+</div></td>
+          </tr>
+          <tr>
+            <th>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/Clipboard">
+                <code>navigator.clipboard</code>
+              </a>
+            </th>
+            <td data-polyfill="navigatorClipboard"><div>*</div></td>
+            <td data-supported="true"><div>86+</div></td>
+            <td data-supported="true"><div>79+</div></td>
+            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>13.1+</div></td>
+            <td data-supported="true"><div>63+ †</div></td>
+            <td data-supported="true"><div>12.0+ †</div></td>
           </tr>
           <tr>
             <th>
