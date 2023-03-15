@@ -11,15 +11,15 @@ export async function clipboardRead() {
 }
 
 export function isSupported(): boolean {
-  return typeof navigator.clipboard.read === 'function' && typeof navigator.clipboard.write === 'function'
+  return 'clipboard' in navigator && typeof navigator.clipboard.read === 'function' && typeof navigator.clipboard.write === 'function'
 }
 
 export function isPolyfilled(): boolean {
-  return navigator.clipboard.write === clipboardWrite || navigator.clipboard.read === clipboardRead
+  return 'clipboard' in navigator && (navigator.clipboard.write === clipboardWrite || navigator.clipboard.read === clipboardRead)
 }
 
 export function apply(): void {
-  if (!isSupported()) {
+  if ('clipboard' in navigator && !isSupported()) {
     navigator.clipboard.write = clipboardWrite
     navigator.clipboard.read = clipboardRead
   }
