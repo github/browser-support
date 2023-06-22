@@ -1,4 +1,4 @@
-export function randomUUID() {
+export function randomUUID(): `${string}-${string}-${string}-${string}-${string}` {
   const buf = new Uint32Array(4)
   crypto.getRandomValues(buf)
   let idx = -1
@@ -7,7 +7,7 @@ export function randomUUID() {
     const r = (buf[idx >> 3] >> ((idx % 8) * 4)) & 15
     const v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
-  })
+  }) as `${string}-${string}-${string}-${string}-${string}`
 }
 
 declare global {

@@ -12,22 +12,16 @@ declare global {
 
 /*#__PURE__*/
 export function isSupported(): boolean {
-  return (
-    'abort' in AbortSignal &&
-    // @ts-expect-error `.abort`
-    typeof AbortSignal.abort === 'function'
-  )
+  return 'abort' in AbortSignal && typeof AbortSignal.abort === 'function'
 }
 
 /*#__PURE__*/
 export function isPolyfilled(): boolean {
-  // @ts-expect-error `.abort`
   return AbortSignal.abort === abortSignalAbort
 }
 
 export function apply(): void {
   if (!isSupported()) {
-    // @ts-expect-error `.abort`
     AbortSignal.abort = abortSignalAbort
   }
 }

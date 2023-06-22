@@ -12,22 +12,16 @@ declare global {
 
 /*#__PURE__*/
 export function isSupported(): boolean {
-  return (
-    'abort' in AbortSignal &&
-    // @ts-expect-error `.timeout`
-    typeof AbortSignal.timeout === 'function'
-  )
+  return 'abort' in AbortSignal && typeof AbortSignal.timeout === 'function'
 }
 
 /*#__PURE__*/
 export function isPolyfilled(): boolean {
-  // @ts-expect-error `.timeout`
   return AbortSignal.timeout === abortSignalTimeout
 }
 
 export function apply(): void {
   if (!isSupported()) {
-    // @ts-expect-error `.timeout`
     AbortSignal.timeout = abortSignalTimeout
   }
 }
