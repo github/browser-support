@@ -13,6 +13,8 @@ import * as promiseAllSettled from './promise-allsettled.js'
 import * as promiseAny from './promise-any.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 import * as stringReplaceAll from './string-replaceall.js'
+import * as arrayFindLast from './array-findlast.js'
+import * as arrayFindLastIndex from './array-findlastindex.js'
 
 export const baseSupport =
   typeof Blob === 'function' &&
@@ -70,7 +72,9 @@ export const polyfills = {
   promiseAllSettled,
   promiseAny,
   requestIdleCallback,
-  stringReplaceAll
+  stringReplaceAll,
+  arrayFindLast,
+  arrayFindLastIndex
 }
 
 export function isSupported() {
