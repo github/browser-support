@@ -1,12 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>GitHub Feature Support Table</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <style>
       html {
-        font-family: "Alliance No.1", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-family: 'Alliance No.1', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif,
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
         font-weight: 400;
         line-height: 28px;
       }
@@ -20,12 +21,13 @@
       h1 {
         font-size: 48px;
         font-weight: 800px;
-        font-feature-settings: "ss02", "ss01";
+        font-feature-settings: 'ss02', 'ss01';
         letter-spacing: -1.44px;
         line-height: 52px;
         margin-bottom: 16px;
       }
-      p, summary {
+      p,
+      summary {
         color: #627597;
         font-size: 20px;
       }
@@ -55,7 +57,8 @@
       table {
         border-collapse: collapse;
       }
-      td, th {
+      td,
+      th {
         border: 0;
         padding: 4px 16px;
         border-radius: 4px;
@@ -101,20 +104,22 @@
         justify-content: center;
         align-items: center;
       }
-      td[data-supported="true"] div, caption p span {
+      td[data-supported='true'] div,
+      caption p span {
         background-color: #dafbe1;
         color: #24292f;
         font-weight: bold;
       }
-      td[data-supported="false"] div, caption p span.unsupported {
+      td[data-supported='false'] div,
+      caption p span.unsupported {
         background-color: #cf222e;
         color: white;
         font-weight: bold;
       }
-      tr[data-polyfills] ~ tr td[data-polyfill] ~ [data-supported="false"] div,
-      tr[data-polyfills] ~ tr td[data-polyfill][data-supported="false"] div,
-      tr[data-transpiled] ~ tr td[data-code] ~ [data-supported="false"] div,
-      tr[data-transpiled] ~ tr td[data-code][data-supported="false"] div,
+      tr[data-polyfills] ~ tr td[data-polyfill] ~ [data-supported='false'] div,
+      tr[data-polyfills] ~ tr td[data-polyfill][data-supported='false'] div,
+      tr[data-transpiled] ~ tr td[data-code] ~ [data-supported='false'] div,
+      tr[data-transpiled] ~ tr td[data-code][data-supported='false'] div,
       caption p span.polyfilled,
       caption p span.buggy,
       caption p span.transpiled {
@@ -122,8 +127,7 @@
         color: #24292f;
       }
       td[data-code]:not([data-supported]) div,
-      td[data-polyfill]:not([data-supported]) div
-      {
+      td[data-polyfill]:not([data-supported]) div {
         background-color: #eaeef2;
       }
       a {
@@ -136,27 +140,29 @@
         font-size: 14px;
       }
       a:hover {
-        text-decoration: underline
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>GitHub Feature Support Table</h1>
-      <p>The table below details some of the client-side ECMAScript features we use to provide the largest and most advanced development platform in the world.</p>
+      <p>
+        The table below details some of the client-side ECMAScript features we use to provide the largest and most
+        advanced development platform in the world.
+      </p>
       <table>
         <caption>
           <details open>
             <summary>Key</summary>
+            <p><span></span>Required feature available in this browser.</p>
+            <p><span class="unsupported">!</span>Required feature, not available in this browser.</p>
+            <p><span class="polyfilled">*</span>Not avaible in this browser, but polyfilled using this library.</p>
             <p>
-              <span></span>Required feature available in this browser.
-            </p><p>
-              <span class="unsupported">!</span>Required feature, not available in this browser.
-            </p><p>
-              <span class="polyfilled">*</span>Not avaible in this browser, but polyfilled using this library.
-            </p><p>
-              <span class="buggy"><small>†</small></span>Required feature, but polyfilled to smooth over bugs in this browser.
-            </p><p>
+              <span class="buggy"><small>†</small></span
+              >Required feature, but polyfilled to smooth over bugs in this browser.
+            </p>
+            <p>
               <span class="transpiled">**</span>Not available in this browser, but transpiled to a compatible syntax.
             </p>
           </details>
@@ -174,7 +180,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr><th></th><th colspan="7"><h3>Base Objects & Functions</h3></th></tr>
+          <tr>
+            <th></th>
+            <th colspan="7"><h3>Base Objects & Functions</h3></th>
+          </tr>
           <tr>
             <th>
               <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">
@@ -415,7 +424,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries"
+              >
                 <code>Object.fromEntries</code>
               </a>
             </th>
@@ -457,7 +468,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll"
+              >
                 <code>String.matchAll</code>
               </a>
             </th>
@@ -469,10 +482,13 @@
             <td data-supported="true"><div>60+</div></td>
             <td data-supported="true"><div>11.0+</div></td>
           </tr>
-          <tr data-polyfills><th></th><th colspan="7"><h3>Polyfilled Features</h3></th></tr>
+          <tr data-polyfills>
+            <th></th>
+            <th colspan="7"><h3>Polyfilled Features</h3></th>
+          </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/abort">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/abort_static">
                 <code>AbortSignal.abort</code>
               </a>
             </th>
@@ -482,7 +498,7 @@
             <td data-supported="true"><div>88+</div></td>
             <td data-supported="true"><div>15+</div></td>
             <td data-supported="true"><div>79+</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>17.0+</div></td>
           </tr>
           <tr>
             <th>
@@ -491,12 +507,12 @@
               </a>
             </th>
             <td data-polyfill="abortSignalTimeout"><div>*</div></td>
-            <td data-supported="false"><div>*</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>103+</div></td>
+            <td data-supported="true"><div>103+</div></td>
             <td data-supported="true"><div>100+</div></td>
-            <td data-supported="false"><div>*</div></td>
-            <td data-supported="false"><div>*</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>16+</div></td>
+            <td data-supported="true"><div>89+</div></td>
+            <td data-supported="true"><div>16+</div></td>
           </tr>
           <tr>
             <th>
@@ -535,7 +551,7 @@
             <td data-polyfill="clipboardItem"><div>*</div></td>
             <td data-supported="true" title="Buggy implementation"><div>66+ †</div></td>
             <td data-supported="true" title="Buggy implementation"><div>79+ †</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true" title="Flagged implementation"><div>87+ †</div></td>
             <td data-supported="true"><div>13.1+</div></td>
             <td data-supported="true" title="Buggy implementation"><div>53+ †</div></td>
             <td data-supported="true" title="Buggy implementation"><div>9.0+ †</div></td>
@@ -570,7 +586,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#add_an_abortable_listener">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#add_an_abortable_listener"
+              >
                 <code>EventTarget.addEventListener signal</code>
               </a>
             </th>
@@ -591,7 +609,7 @@
             <td data-polyfill="navigatorClipboard"><div>*</div></td>
             <td data-supported="true"><div>86+</div></td>
             <td data-supported="true"><div>79+</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>63+ †</div></td>
             <td data-supported="true"><div>13.1+</div></td>
             <td data-supported="true"><div>63+ †</div></td>
             <td data-supported="true"><div>12.0+ †</div></td>
@@ -606,7 +624,7 @@
             <td data-supported="true"><div>76+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>75+</div></td>
-            <td data-supported="false"<div>*</div></td>
+            <td data-supported="true"><div>16+</div></td>
             <td data-supported="true"><div>63+</div></td>
             <td data-supported="true"><div>12.0+</div></td>
           </tr>
@@ -622,11 +640,13 @@
             <td data-supported="true"><div>92+</div></td>
             <td data-supported="true"><div>15.4+</div></td>
             <td data-supported="true"><div>79+</div></td>
-            <td data-supported="false"><div>*</div></td>
+            <td data-supported="true"><div>17.0+</div></td>
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+              >
                 <code>Promise.allSettled</code>
               </a>
             </th>
@@ -637,6 +657,20 @@
             <td data-supported="true"><div>13+</div></td>
             <td data-supported="true"><div>63+</div></td>
             <td data-supported="true"><div>12.0+</div></td>
+          </tr>
+          <tr>
+            <th>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any">
+                <code>Promise.any</code>
+              </a>
+            </th>
+            <td data-polyfill="promiseAny"><div>*</div></td>
+            <td data-supported="true"><div>85+</div></td>
+            <td data-supported="true"><div>85+</div></td>
+            <td data-supported="true"><div>79+</div></td>
+            <td data-supported="true"><div>14+</div></td>
+            <td data-supported="true"><div>71+</div></td>
+            <td data-supported="true"><div>14+</div></td>
           </tr>
           <tr>
             <th>
@@ -654,7 +688,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll"
+              >
                 <code>String.replaceAll</code>
               </a>
             </th>
@@ -668,22 +704,43 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any">
-                <code>Promise.any</code>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast">
+                <code>Array.findLast</code>
               </a>
             </th>
-            <td data-polyfill="promiseAny"><div>*</div></td>
-            <td data-supported="true"><div>85+</div></td>
-            <td data-supported="true"><div>85+</div></td>
-            <td data-supported="true"><div>79+</div></td>
-            <td data-supported="true"><div>14+</div></td>
-            <td data-supported="true"><div>71+</div></td>
-            <td data-supported="true"><div>14.0+</div></td>
+            <td data-polyfill="arrayFindLast"><div>*</div></td>
+            <td data-supported="true"><div>97+</div></td>
+            <td data-supported="true"><div>97+</div></td>
+            <td data-supported="true"><div>104+</div></td>
+            <td data-supported="true"><div>15.4+</div></td>
+            <td data-supported="true"><div>83+</div></td>
+            <td data-supported="true"><div>18.0+</div></td>
           </tr>
-          <tr><th></th><th colspan="7"><h3>Native Syntax</h3></th></tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges#using_named_groups">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLastIndex"
+              >
+                <code>Array.findLastIndex</code>
+              </a>
+            </th>
+            <td data-polyfill="arrayFindLastIndex"><div>*</div></td>
+            <td data-supported="true"><div>97+</div></td>
+            <td data-supported="true"><div>97+</div></td>
+            <td data-supported="true"><div>104+</div></td>
+            <td data-supported="true"><div>15.4+</div></td>
+            <td data-supported="true"><div>83+</div></td>
+            <td data-supported="true"><div>18.0+</div></td>
+          </tr>
+          <tr>
+            <th></th>
+            <th colspan="7"><h3>Native Syntax</h3></th>
+          </tr>
+          <tr>
+            <th>
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges#using_named_groups"
+              >
                 <code>Exponentiation Operator</code>
               </a>
             </th>
@@ -697,7 +754,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Spread_syntax#Spread_in_object_literals">
+              <a
+                href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Spread_syntax#Spread_in_object_literals"
+              >
                 <code>Object Rest/Spead</code>
               </a>
             </th>
@@ -711,7 +770,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges#using_named_groups">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges#using_named_groups"
+              >
                 <code>RegExp Named Capture Groups</code>
               </a>
             </th>
@@ -729,7 +790,11 @@
                 <code>Async Generators & for await</code>
               </a>
             </th>
-            <td data-code="(async function(){async function*iter(){ yield 1 }let c=0;for await(const i of iter()) { c+= i};return c===1})()"><div>!</div></td>
+            <td
+              data-code="(async function(){async function*iter(){ yield 1 }let c=0;for await(const i of iter()) { c+= i};return c===1})()"
+            >
+              <div>!</div>
+            </td>
             <td data-supported="true"><div>63+</div></td>
             <td data-supported="true"><div>79+</div></td>
             <td data-supported="true"><div>57+</div></td>
@@ -767,7 +832,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator"
+              >
                 <code>Nullish Coalescing Operator (??)</code>
               </a>
             </th>
@@ -779,10 +846,15 @@
             <td data-supported="true"><div>67+</div></td>
             <td data-supported="true"><div>13.0+</div></td>
           </tr>
-          <tr data-transpiled><th></th><th colspan="7"><h3>Transpiled Native Syntax</h3></th></tr>
+          <tr data-transpiled>
+            <th></th>
+            <th colspan="7"><h3>Transpiled Native Syntax</h3></th>
+          </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment"
+              >
                 <code>Logical Nullish Assignment (??=)</code>
               </a>
             </th>
@@ -796,7 +868,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields#public_instance_fields">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields#public_instance_fields"
+              >
                 <code>Public Class Fields</code>
               </a>
             </th>
@@ -824,7 +898,9 @@
           </tr>
           <tr>
             <th>
-              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks">
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks"
+              >
                 <code>Static Class Blocks</code>
               </a>
             </th>
@@ -832,9 +908,9 @@
             <td data-supported="true"><div>94+</div></td>
             <td data-supported="true"><div>94+</div></td>
             <td data-supported="true"><div>93+</div></td>
-            <td data-supported="false"><div>**</div></td>
+            <td data-supported="true"><div>16.4+</div></td>
             <td data-supported="true"><div>80+</div></td>
-            <td data-supported="false"><div>**</div></td>
+            <td data-supported="true"><div>17.0+</div></td>
           </tr>
           <tr>
             <th>
@@ -867,10 +943,10 @@
         return [name, version]
       }
       const [browser, version] = getBrowser(navigator.userAgent)
-      document.getElementById('your-browser').innerText = browser + " " + version
+      document.getElementById('your-browser').innerText = browser + ' ' + version
     </script>
     <script>
-      for(const el of document.querySelectorAll('[data-code]')) {
+      for (const el of document.querySelectorAll('[data-code]')) {
         let supported = false
         const code = el.getAttribute('data-code')
         try {
@@ -878,7 +954,7 @@
         } catch (e) {
           supported = false
         }
-        Promise.resolve(supported).then((value) => {
+        Promise.resolve(supported).then(value => {
           el.setAttribute('data-supported', Boolean(value))
           if (value) el.querySelector('div').textContent = ''
         })
@@ -888,7 +964,7 @@
       // import * as support from '../lib/index.js'
       import * as support from 'https://unpkg.com/@github/browser-support@latest/lib/index.js'
       const polyfills = support.polyfills
-      for(const el of document.querySelectorAll('[data-export]')) {
+      for (const el of document.querySelectorAll('[data-export]')) {
         let supported = false
         const key = el.getAttribute('data-export')
         if (key in support && typeof support[key] === 'function') {
@@ -898,12 +974,12 @@
         } else {
           supported = false
         }
-        Promise.resolve(supported).then((value) => {
+        Promise.resolve(supported).then(value => {
           el.setAttribute('data-supported', Boolean(value))
           if (value) el.querySelector('div').textContent = ''
         })
       }
-      for(const el of document.querySelectorAll('[data-polyfill]')) {
+      for (const el of document.querySelectorAll('[data-polyfill]')) {
         let supported = false
         const name = el.getAttribute('data-polyfill') || ''
         if (name in polyfills) {
@@ -911,7 +987,7 @@
         } else {
           supported = false
         }
-        Promise.resolve(supported).then((value) => {
+        Promise.resolve(supported).then(value => {
           el.setAttribute('data-supported', Boolean(value))
           if (value) el.querySelector('div').textContent = ''
         })
