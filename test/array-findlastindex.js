@@ -11,6 +11,7 @@ describe('arrayFindLastIndex', () => {
 
   it('returns value that passes truthy', () => {
     expect(arrayFindLastIndex.call([1, 2, 3], v => v === 3)).to.equal(2)
+    expect(arrayFindLastIndex.call([1, 2, 3], v => v === 1)).to.equal(0)
     const arr = [1, 2, 3]
     const recv = {}
     expect(
