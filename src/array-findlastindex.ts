@@ -3,7 +3,7 @@ export function arrayFindLastIndex<T>(
   pred: (this: T[], value: T, i: number, array: T[]) => boolean,
   recv = this
 ): number {
-  for (let i = this.length; i > 0; i -= 1) {
+  for (let i = this.length - 1; i >= 0; i -= 1) {
     if (pred.call(recv, this[i], i, this)) return i
   }
   return -1
