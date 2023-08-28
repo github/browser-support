@@ -1,7 +1,7 @@
 export function arrayFindLastIndex<T>(
   this: T[],
   pred: (this: T[], value: T, i: number, array: T[]) => boolean,
-  recv = this
+  recv = this,
 ): number {
   for (let i = this.length - 1; i >= 0; i -= 1) {
     if (pred.call(recv, this[i], i, this)) return i
@@ -24,7 +24,7 @@ export function apply(): void {
     const defn = {
       value: arrayFindLastIndex,
       writable: true,
-      configurable: true
+      configurable: true,
     }
     Object.defineProperty(Array.prototype, 'findLastIndex', defn)
   }

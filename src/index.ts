@@ -74,7 +74,7 @@ export const polyfills = {
   requestIdleCallback,
   stringReplaceAll,
   arrayFindLast,
-  arrayFindLastIndex
+  arrayFindLastIndex,
 }
 
 export function isSupported() {

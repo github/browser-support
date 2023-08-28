@@ -27,8 +27,8 @@ describe('navigator clipboard', () => {
       await clipboardWrite([
         new globalThis.ClipboardItem({
           'foo/bar': 'horrible',
-          'text/plain': Promise.resolve('foo')
-        })
+          'text/plain': Promise.resolve('foo'),
+        }),
       ])
       expect(calls).to.have.lengthOf(1)
       expect(calls[0]).to.eql(['foo'])
@@ -40,12 +40,12 @@ describe('navigator clipboard', () => {
       await clipboardWrite([
         new globalThis.ClipboardItem({
           'foo/bar': 'horrible',
-          'text/plain': Promise.resolve('multiple-pass')
+          'text/plain': Promise.resolve('multiple-pass'),
         }),
         new globalThis.ClipboardItem({
           'foo/bar': 'multiple-fail',
-          'text/plain': Promise.resolve('multiple-fail')
-        })
+          'text/plain': Promise.resolve('multiple-fail'),
+        }),
       ])
       expect(calls).to.have.lengthOf(1)
       expect(calls[0]).to.eql(['multiple-pass'])

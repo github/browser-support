@@ -27,7 +27,7 @@ export function apply(): void {
     Object.defineProperty(Object, 'hasOwn', {
       value: objectHasOwn,
       configurable: true,
-      writable: true
+      writable: true,
     })
   }
 }

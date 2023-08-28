@@ -3,7 +3,7 @@ export function addEventListenerWithAbortSignal(
   this: EventTarget,
   type: string,
   callback: EventListenerOrEventListenerObject | null,
-  options?: AddEventListenerOptions | boolean
+  options?: AddEventListenerOptions | boolean,
 ): void {
   if (typeof options === 'object' && 'signal' in options && options.signal instanceof AbortSignal) {
     if (options.signal.aborted) return
@@ -23,7 +23,7 @@ declare global {
 export function isSupported(): boolean {
   let signalSupported = false
   const setSignalSupported = () => (signalSupported = true)
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   function noop() {}
   const options = Object.create({}, {signal: {get: setSignalSupported}})
   try {
