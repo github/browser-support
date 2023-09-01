@@ -7,13 +7,13 @@ export class AggregateError extends Error {
     Object.defineProperty(this, 'errors', {
       value: Array.from(errors),
       configurable: true,
-      writable: true
+      writable: true,
     })
     if (options.cause) {
       Object.defineProperty(this, 'cause', {
         value: options.cause,
         configurable: true,
-        writable: true
+        writable: true,
       })
     }
   }

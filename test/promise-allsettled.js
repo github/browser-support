@@ -12,12 +12,12 @@ describe('Promise.allSettled', () => {
   it('returns list of Promise value/rejections', async () => {
     expect(
       // eslint-disable-next-line prefer-promise-reject-errors
-      await promiseAllSettled([Promise.resolve(1), Promise.reject(2), Promise.resolve(3), Promise.reject(4)])
+      await promiseAllSettled([Promise.resolve(1), Promise.reject(2), Promise.resolve(3), Promise.reject(4)]),
     ).to.eql([
       {status: 'fulfilled', value: 1},
       {status: 'rejected', reason: 2},
       {status: 'fulfilled', value: 3},
-      {status: 'rejected', reason: 4}
+      {status: 'rejected', reason: 4},
     ])
   })
 })

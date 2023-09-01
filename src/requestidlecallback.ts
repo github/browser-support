@@ -13,14 +13,14 @@ export function requestIdleCallback(callback: IdleRequestCallback, options: Idle
       didTimeout: false,
       timeRemaining() {
         return Math.max(0, maxDeadline - (Date.now() - start))
-      }
+      },
     },
     'didTimeout',
     {
       get() {
         return Date.now() - start > timeout
-      }
-    }
+      },
+    },
   )
   return window.setTimeout(() => {
     callback(deadline)

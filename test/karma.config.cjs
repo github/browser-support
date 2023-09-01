@@ -6,7 +6,7 @@ module.exports = function (config) {
     frameworks: ['mocha', 'chai'],
     files: [
       {pattern: 'lib/*.js', type: 'module', included: false},
-      {pattern: 'test/*', type: 'module', included: true}
+      {pattern: 'test/*', type: 'module', included: true},
     ],
     reporters: ['mocha'],
     reportSlowerThan: 50,
@@ -19,8 +19,8 @@ module.exports = function (config) {
     concurrency: Infinity,
     client: {
       mocha: {
-        timeout: 100
-      }
-    }
+        timeout: 100,
+      },
+    },
   })
 }

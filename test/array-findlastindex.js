@@ -23,8 +23,8 @@ describe('arrayFindLastIndex', () => {
           expect(_arr).to.equal(arr)
           expect(v).to.equal(arr[i])
         },
-        recv
-      )
+        recv,
+      ),
     )
   })
 })

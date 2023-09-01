@@ -1,7 +1,7 @@
 export function stringReplaceAll(
   this: string,
   searchValue: RegExp | string,
-  replaceValue: ((substring: string, ...args: unknown[]) => string) | string
+  replaceValue: ((substring: string, ...args: unknown[]) => string) | string,
 ): string {
   if (searchValue instanceof RegExp) return this.replace(searchValue, replaceValue as unknown as string)
   let pos = -1

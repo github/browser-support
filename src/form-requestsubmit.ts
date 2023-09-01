@@ -1,6 +1,6 @@
 export function requestSubmit(
   this: HTMLFormElement,
-  submitter: HTMLButtonElement | HTMLInputElement | null = null
+  submitter: HTMLButtonElement | HTMLInputElement | null = null,
 ): void {
   const event = new SubmitEvent('submit', {bubbles: true, cancelable: true, submitter})
   let input
@@ -9,7 +9,7 @@ export function requestSubmit(
       type: 'hidden',
       hidden: true,
       name: submitter.name,
-      value: submitter.value
+      value: submitter.value,
     })
     this.append(input)
   }

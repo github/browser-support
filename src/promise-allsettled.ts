@@ -1,14 +1,14 @@
 export function promiseAllSettled<T extends readonly unknown[] | []>(
-  values: T
+  values: T,
 ): Promise<{-readonly [P in keyof T]: PromiseSettledResult<Awaited<T[P]>>}> {
   return Promise.all(
     values.map(p =>
       // eslint-disable-next-line github/no-then
       Promise.resolve(p).then(
         (value: unknown) => ({status: 'fulfilled', value}),
-        (reason: unknown) => ({status: 'rejected', reason})
-      )
-    )
+        (reason: unknown) => ({status: 'rejected', reason}),
+      ),
+    ),
   ) as unknown as Promise<{-readonly [P in keyof T]: PromiseSettledResult<Awaited<T[P]>>}>
 }
 
