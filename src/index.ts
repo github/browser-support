@@ -3,6 +3,7 @@ import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as arrayAt from './arraylike-at.js'
 import * as clipboardItem from './clipboarditem.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
+import * as elementCheckVisibility from './element-checkvisibility.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
 import * as formRequestSubmit from './form-requestsubmit.js'
@@ -58,6 +59,7 @@ export const polyfills = {
   arrayAt,
   clipboardItem,
   cryptoRandomUUID,
+  elementCheckVisibility,
   eventAbortSignal,
   navigatorClipboard,
   formRequestSubmit,
