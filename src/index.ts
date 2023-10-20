@@ -1,18 +1,13 @@
 import * as abortSignalAbort from './abortsignal-abort.js'
 import * as abortSignalTimeout from './abortsignal-timeout.js'
-import * as aggregateError from './aggregateerror.js'
 import * as arrayAt from './arraylike-at.js'
 import * as clipboardItem from './clipboarditem.js'
 import * as cryptoRandomUUID from './crypto-randomuuid.js'
-import * as elementReplaceChildren from './element-replacechildren.js'
 import * as eventAbortSignal from './event-abortsignal.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
 import * as formRequestSubmit from './form-requestsubmit.js'
 import * as objectHasOwn from './object-hasown.js'
-import * as promiseAllSettled from './promise-allsettled.js'
-import * as promiseAny from './promise-any.js'
 import * as requestIdleCallback from './requestidlecallback.js'
-import * as stringReplaceAll from './string-replaceall.js'
 import * as arrayFindLast from './array-findlast.js'
 import * as arrayFindLastIndex from './array-findlastindex.js'
 
@@ -39,11 +34,11 @@ export const baseSupport =
   'flatMap' in Array.prototype &&
   'trimEnd' in String.prototype &&
   // ES2020
-  //'allSettled' in Promise && // Polyfilled
+  'allSettled' in Promise &&
   'matchAll' in String.prototype &&
   // ES2021
-  //'replaceAll' in String.prototype && // Polyfilled
-  // 'any' in Promise && // Polyfilled
+  'replaceAll' in String.prototype &&
+  'any' in Promise &&
   // ES2022
   // 'at' in String.prototype && // Polyfilled
   // 'at' in Array.prototype && // Polyfilled
@@ -51,28 +46,23 @@ export const baseSupport =
   // ESNext
   // 'abort' in AbortSignal && // Polyfilled
   // 'timeout' in AbortSignal && // Polyfilled
-  // typeof AggregateError === 'function' && // Polyfilled
+  typeof AggregateError === 'function' &&
   // 'randomUUID' in crypto && // Polyfilled
-  // 'replaceChildren' in Element.prototype && // Polyfilled
+  'replaceChildren' in Element.prototype &&
   // 'requestIdleCallback' in window && // Polyfilled
   true
 
 export const polyfills = {
   abortSignalAbort,
   abortSignalTimeout,
-  aggregateError,
   arrayAt,
   clipboardItem,
   cryptoRandomUUID,
-  elementReplaceChildren,
   eventAbortSignal,
   navigatorClipboard,
   formRequestSubmit,
   objectHasOwn,
-  promiseAllSettled,
-  promiseAny,
   requestIdleCallback,
-  stringReplaceAll,
   arrayFindLast,
   arrayFindLastIndex,
 }
