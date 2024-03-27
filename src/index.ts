@@ -4,6 +4,12 @@ import * as elementCheckVisibility from './element-checkvisibility.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 
+let supportsModalPseudo = false
+try {
+  // This will error in older browsers
+  supportsModalPseudo = document.body.matches(':modal') === false
+} catch {}
+
 export const baseSupport =
   typeof globalThis === 'object' &&
   // ES2019
@@ -26,6 +32,7 @@ export const baseSupport =
   // DOM / HTML and other specs
   typeof queueMicrotask === 'function' &&
   typeof HTMLDialogElement === 'function' &&
+  supportsModalPseudo &&
   typeof AggregateError === 'function' &&
   typeof BroadcastChannel === 'function' &&
   'randomUUID' in crypto &&
