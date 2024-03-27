@@ -8,7 +8,9 @@ let supportsModalPseudo = false
 try {
   // This will error in older browsers
   supportsModalPseudo = document.body.matches(':modal') === false
-} catch {}
+} catch {
+  supportsModalPseudo = false
+}
 
 export const baseSupport =
   typeof globalThis === 'object' &&
