@@ -1,4 +1,3 @@
-import * as abortSignalTimeout from './abortsignal-timeout.js'
 import * as clipboardItem from './clipboarditem.js'
 import * as elementCheckVisibility from './element-checkvisibility.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
@@ -30,7 +29,7 @@ export const baseSupport =
   'hasOwn' in Object &&
   // ESNext
   'abort' in AbortSignal &&
-  // 'timeout' in AbortSignal && // Polyfilled
+  'timeout' in AbortSignal &&
   // DOM / HTML and other specs
   typeof queueMicrotask === 'function' &&
   typeof HTMLDialogElement === 'function' &&
@@ -44,7 +43,6 @@ export const baseSupport =
   true
 
 export const polyfills = {
-  abortSignalTimeout,
   clipboardItem,
   elementCheckVisibility,
   navigatorClipboard,
