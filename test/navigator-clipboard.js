@@ -16,7 +16,7 @@ describe('navigator clipboard', () => {
       expect(arr).to.have.lengthOf(1)
       expect(arr[0]).to.be.an.instanceof(globalThis.ClipboardItem)
       expect(arr[0].types).to.eql(['text/plain'])
-      expect(await arr[0].getType('text/plain')).to.eql('foo')
+      expect(await (await arr[0].getType('text/plain')).text()).to.eql('foo')
     })
   })
 
