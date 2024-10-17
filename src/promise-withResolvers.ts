@@ -24,7 +24,7 @@ export function isPolyfilled(): boolean {
 }
 
 export function apply(): void {
-  if (!('withResolvers' in Promise)) {
+  if (!isSupported()) {
     Object.assign(Promise, {withResolvers})
   }
 }
