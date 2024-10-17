@@ -1,6 +1,7 @@
 import * as clipboardItem from './clipboarditem.js'
 import * as elementCheckVisibility from './element-checkvisibility.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
+import * as withResolvers from './promise-withResolvers.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 
 let supportsModalPseudo = false
@@ -47,6 +48,7 @@ export const polyfills = {
   elementCheckVisibility,
   navigatorClipboard,
   requestIdleCallback,
+  withResolvers,
 }
 
 export function isSupported() {
