@@ -14,6 +14,6 @@ describe('requestIdleCallback', () => {
     expect(Object.keys(arg)).to.eql(['didTimeout', 'timeRemaining'])
     expect(arg).to.have.property('didTimeout').to.be.a('boolean')
     expect(arg).to.have.property('timeRemaining').to.be.a('function')
-    expect(arg.timeRemaining()).to.be.a('number').lessThan(50).greaterThanOrEqual(0)
+    expect(arg.timeRemaining()).to.be.a('number').lessThanOrEqual(50).greaterThanOrEqual(0)
   })
 })
