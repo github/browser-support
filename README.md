@@ -4,14 +4,14 @@ This library allows websites to maintain compatibility with older browsers, whic
 
 If you would like to see what features the browser you are currently using implements, you [can visit the documentation site](https://github.github.com/browser-support/) which displays a compatibility table that detects which features are natively supported in your browser.
 
-### How is this used on GitHub?
+## How is this used on GitHub?
 
 We use all of these polyfills on GitHub.com. We also use the `isSupported()` function to determine if the browser meets a minimum set of functionality which we expect, browser that return false from `isSupported()` do not send errors or statistics to our backend monitoring.
 
 ## Installation
 
-```
-$ npm install @github/browser-support
+```bash
+npm install @github/browser-support
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ if (!isSupported()) {
 
 ## Development
 
-```
+```bash
 npm install
 npm test
 ```

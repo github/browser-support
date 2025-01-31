@@ -14,7 +14,7 @@
     "author": "GitHub Inc.",
     "contributors": [
         "Keith Cirkel (https://keithcirkel.co.uk/)",
-        "Kristj\u00e1n Oddsson <koddsson@gmail.com>"
+        "Kristján Oddsson <koddsson@gmail.com>"
     ],
     "type": "module",
     "main": "lib/index.js",
@@ -49,5 +49,9 @@
         "mocha": "^10.2.0",
         "tslib": "^2.6.2",
         "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@github/browser-support": "^4.2.0",
+        "lodash": "^4.17.21"
     }
 }
