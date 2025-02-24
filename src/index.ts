@@ -4,6 +4,7 @@ import * as navigatorClipboard from './navigator-clipboard.js'
 import * as withResolvers from './promise-withResolvers.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 import * as popover from '@oddbird/popover-polyfill/fn'
+import * as dialogToggleEvents from 'dialog-toggle-events-polyfill/fn'
 
 let supportsModalPseudo = false
 try {
@@ -51,6 +52,7 @@ export const polyfills = {
   requestIdleCallback,
   withResolvers,
   popover,
+  dialogToggleEvents,
 }
 
 export function isSupported() {
