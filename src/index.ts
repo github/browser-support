@@ -5,6 +5,7 @@ import * as withResolvers from './promise-withResolvers.js'
 import * as requestIdleCallback from './requestidlecallback.js'
 import * as popover from '@oddbird/popover-polyfill/fn'
 import * as dialogToggleEvents from 'dialog-toggle-events-polyfill/fn'
+import * as commandAndCommandFor from 'invokers-polyfill/fn'
 
 let supportsModalPseudo = false
 try {
@@ -53,6 +54,7 @@ export const polyfills = {
   withResolvers,
   popover,
   dialogToggleEvents,
+  commandAndCommandFor,
 }
 
 export function isSupported() {
