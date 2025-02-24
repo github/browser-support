@@ -1,4 +1,5 @@
-import {apply, isPolyfilled, isSupported, withResolvers} from '../lib/promise-withResolvers.js'
+import {expect} from 'chai'
+import {apply, isPolyfilled, isSupported, withResolvers} from '../src/promise-withResolvers.ts'
 
 describe('withResolvers', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {

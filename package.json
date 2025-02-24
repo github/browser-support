@@ -25,8 +25,8 @@
     "scripts": {
         "build": "tsc --build",
         "lint": "eslint . --ignore-path .gitignore",
-        "pretest": "npm run build",
-        "test": "npm run lint && karma start test/karma.config.cjs",
+        "pretest": "npm run lint",
+        "test": "wtr",
         "prepack": "npm run build",
         "postpublish": "npm publish --ignore-scripts --@github:registry='https://npm.pkg.github.com'"
     },
@@ -36,17 +36,11 @@
         "@types/node": "^20.5.7",
         "@typescript-eslint/eslint-plugin": "^6.5.0",
         "@typescript-eslint/parser": "^6.5.0",
-        "chai": "^4.3.8",
-        "chromium": "^3.0.3",
+        "@web/dev-server-esbuild": "^1.0.4",
+        "@web/test-runner": "^0.20.0",
+        "chai": "^5.2.0",
         "eslint": "^8.48.0",
         "eslint-plugin-github": "^4.10.0",
-        "karma": "^6.4.2",
-        "karma-chai": "^0.1.0",
-        "karma-chai-spies": "^0.1.4",
-        "karma-chrome-launcher": "^3.2.0",
-        "karma-mocha": "^2.0.1",
-        "karma-mocha-reporter": "^2.2.5",
-        "mocha": "^10.2.0",
         "tslib": "^2.6.2",
         "typescript": "^5.2.2"
     }

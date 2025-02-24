@@ -1,4 +1,5 @@
-import {apply, isPolyfilled, isSupported, requestIdleCallback} from '../lib/requestidlecallback.js'
+import {expect} from 'chai'
+import {apply, isPolyfilled, isSupported, requestIdleCallback} from '../src/requestidlecallback.ts'
 
 describe('requestIdleCallback', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {
