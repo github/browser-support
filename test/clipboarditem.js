@@ -1,4 +1,5 @@
-import {ClipboardItem, apply, isSupported, isPolyfilled} from '../lib/clipboarditem.js'
+import {expect} from 'chai'
+import {ClipboardItem, apply, isSupported, isPolyfilled} from '../src/clipboarditem.ts'
 
 describe('ClipboardItem', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {
