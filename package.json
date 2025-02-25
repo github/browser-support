@@ -46,6 +46,7 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@oddbird/popover-polyfill": "^0.5.2"
+        "@oddbird/popover-polyfill": "^0.5.2",
+        "dialog-toggle-events-polyfill": "^1.1.2"
     }
 }
