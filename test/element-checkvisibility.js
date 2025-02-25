@@ -1,4 +1,5 @@
-import {apply, isPolyfilled, isSupported, checkVisibility} from '../lib/element-checkvisibility.js'
+import {expect} from 'chai'
+import {apply, isPolyfilled, isSupported, checkVisibility} from '../src/element-checkvisibility.ts'
 
 describe('checkVisibility', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {

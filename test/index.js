@@ -1,4 +1,5 @@
-import {apply, isPolyfilled, isSupported} from '../lib/index.js'
+import {expect} from 'chai'
+import {apply, isPolyfilled, isSupported} from '../src/index.ts'
 
 describe('abortSignalAbort', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {
