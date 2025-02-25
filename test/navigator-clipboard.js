@@ -1,4 +1,5 @@
-import {clipboardRead, clipboardWrite, apply, isPolyfilled, isSupported} from '../lib/navigator-clipboard.js'
+import {expect} from 'chai'
+import {clipboardRead, clipboardWrite, apply, isPolyfilled, isSupported} from '../src/navigator-clipboard.ts'
 
 describe('navigator clipboard', () => {
   it('has standard isSupported, isPolyfilled, apply API', () => {
