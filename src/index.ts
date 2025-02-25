@@ -3,6 +3,7 @@ import * as elementCheckVisibility from './element-checkvisibility.js'
 import * as navigatorClipboard from './navigator-clipboard.js'
 import * as withResolvers from './promise-withResolvers.js'
 import * as requestIdleCallback from './requestidlecallback.js'
+import * as popover from '@oddbird/popover-polyfill/fn'
 
 let supportsModalPseudo = false
 try {
@@ -49,6 +50,7 @@ export const polyfills = {
   navigatorClipboard,
   requestIdleCallback,
   withResolvers,
+  popover,
 }
 
 export function isSupported() {
