@@ -17,8 +17,8 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org/
           cache: npm
-      - run: npm run build
       - run: npm ci
+      - run: npm run build
       - run: npm test
       - run: npm version ${TAG_NAME} --git-tag-version=false
         env:
