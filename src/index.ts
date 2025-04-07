@@ -67,6 +67,6 @@ export function isPolyfilled() {
 
 export function apply() {
   for (const polyfill of Object.values(polyfills)) {
-    polyfill.apply()
+    if (!polyfill.isSupported()) polyfill.apply()
   }
 }
