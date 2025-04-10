@@ -36,6 +36,29 @@ npm install
 npm test
 ```
 
+## Upgrading browser-support in Dotcom 
+
+During upgrades, it is crucial to ensure that browser error reporting to Sentry is not disrupted. Use the following steps to validate this functionality:
+
+### Review lab testing
+- Create a PR to upgrade the `browser-support` version in Dotcom.
+- Trigger a browser error from your `review-lab` instance and confirm it is reported in Sentry:
+  - Append `#b00m` to your `review-lab` URL and refresh the page.
+  - Confirm the error is reported in [review-lab Sentry](https://github.sentry.io/issues/?environment=review-lab&groupStatsPeriod=auto&project=1890375&query=b00m&referrer=issue-list&statsPeriod=5m).
+  - Perform these steps in Chrome, Firefox, Edge, and Opera. Note: Errors are currently not reported in Safari due to an [open issue](https://github.com/github/web-systems/issues/3162).
+
+### Production deployment
+
+- Check the [browser-reporting](https://app.datadoghq.com/monitors/168685099) monitor.
+  - If the rate of reported browser errors drops, the monitor will trigger an alert in the [#web-systems-ops](https://github-grid.enterprise.slack.com/archives/C046W1V95FV) channel.
+- After deploying to canary:
+  - Trigger a browser error by appending `#b00m` to your URL.
+  - Confirm the error is reported in [canary Sentry](https://github.sentry.io/issues/?environment=canary&groupStatsPeriod=auto&project=1890375&query=b00m&referrer=issue-list&statsPeriod=5m).
+- After deploying to production:
+  - Trigger a browser error by appending `#b00m` to your URL.  
+  - Confirm the error is reported in [production Sentry](https://github.sentry.io/issues/?environment=production&groupStatsPeriod=auto&project=1890375&query=b00m&referrer=issue-list&statsPeriod=5m).
+  - Check the [browser-reporting monitor](https://app.datadoghq.com/monitors/168685099) to ensure there are no anomalies in the error reporting rate.
+
 ## Contributing
 
 ### Adding polyfills
