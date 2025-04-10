@@ -43,7 +43,7 @@ During upgrades, it is crucial to ensure that browser error reporting to Sentry 
 ### Review lab testing
 - Create a PR to upgrade the `browser-support` version in Dotcom.
 - Trigger a browser error from your `review-lab` instance and confirm it is reported in Sentry:
-  - Append `#b00m` to your `review-lab` URL and refresh the page.
+  - Append `#b00m` to your `review-lab` URL (e.g. `https://branchname.review-lab.github.com#b00m`) and refresh the page.
   - Confirm the error is reported in [review-lab Sentry](https://github.sentry.io/issues/?environment=review-lab&groupStatsPeriod=auto&project=1890375&query=b00m&referrer=issue-list&statsPeriod=5m).
   - Perform these steps in Chrome, Firefox, Edge, and Opera. Note: Errors are currently not reported in Safari due to an [open issue](https://github.com/github/web-systems/issues/3162).
 
