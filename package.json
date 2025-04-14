@@ -14,7 +14,7 @@
     "author": "GitHub Inc.",
     "contributors": [
         "Keith Cirkel (https://keithcirkel.co.uk/)",
-        "Kristj\u00e1n Oddsson <koddsson@gmail.com>"
+        "Kristján Oddsson <koddsson@gmail.com>"
     ],
     "type": "module",
     "main": "lib/index.js",
@@ -47,7 +47,6 @@
     },
     "dependencies": {
         "@oddbird/popover-polyfill": "^0.5.2",
-        "dialog-toggle-events-polyfill": "^1.1.3",
         "invokers-polyfill": "^0.5.2"
     }
 }
