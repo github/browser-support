@@ -2,10 +2,15 @@
 /*#__PURE__*/
 function getIteratorPrototype(): Iterator<unknown> | null {
   try {
-    // Try to get Iterator prototype from a generator
-    const GeneratorFunction = Object.getPrototypeOf(function* () {}).constructor
-    const generator = new GeneratorFunction('return (function*(){})();')()
-    return Object.getPrototypeOf(Object.getPrototypeOf(generator))
+    // Derive IteratorPrototype from the Array iterator prototype chain.
+    // This avoids dynamic evaluation and works under strict CSP.
+    if (typeof Symbol !== 'function' || typeof Symbol.iterator !== 'symbol') {
+      return null
+    }
+    const arrayIter = [][Symbol.iterator]()
+    const arrayIterProto = Object.getPrototypeOf(arrayIter)
+    if (!arrayIterProto) return null
+    return Object.getPrototypeOf(arrayIterProto) as Iterator<unknown> | null
   } catch {
     return null
   }
@@ -279,12 +284,15 @@ function find<T>(this: Iterator<T>, predicate: (value: T, index: number) => bool
 
 /*#__PURE__*/
 function iteratorFrom<T>(obj: Iterator<T> | Iterable<T>): Iterator<T> {
-  if (typeof obj === 'object' && obj !== null) {
-    if ('next' in obj && typeof obj.next === 'function') {
+  if (obj != null) {
+    // Check for iterator (an object with a .next method)
+    if (typeof obj === 'object' && 'next' in obj && typeof (obj as Iterator<T>).next === 'function') {
       return obj as Iterator<T>
     }
-    if (Symbol.iterator in obj) {
-      return obj[Symbol.iterator]()
+    // Box primitives (e.g. strings) so we can check Symbol.iterator on them
+    const iterable = Object(obj) as {[Symbol.iterator]?: () => Iterator<T>}
+    if (Symbol.iterator in iterable && typeof iterable[Symbol.iterator] === 'function') {
+      return iterable[Symbol.iterator]!()
     }
   }
   throw new TypeError('Object is not an iterator or iterable')
@@ -322,6 +330,26 @@ export function isPolyfilled(): boolean {
     IteratorPrototype !== null &&
     'map' in IteratorPrototype &&
     IteratorPrototype.map === map &&
+    'filter' in IteratorPrototype &&
+    IteratorPrototype.filter === filter &&
+    'take' in IteratorPrototype &&
+    IteratorPrototype.take === take &&
+    'drop' in IteratorPrototype &&
+    IteratorPrototype.drop === drop &&
+    'flatMap' in IteratorPrototype &&
+    IteratorPrototype.flatMap === flatMap &&
+    'reduce' in IteratorPrototype &&
+    IteratorPrototype.reduce === reduce &&
+    'toArray' in IteratorPrototype &&
+    IteratorPrototype.toArray === toArray &&
+    'forEach' in IteratorPrototype &&
+    IteratorPrototype.forEach === forEach &&
+    'some' in IteratorPrototype &&
+    IteratorPrototype.some === some &&
+    'every' in IteratorPrototype &&
+    IteratorPrototype.every === every &&
+    'find' in IteratorPrototype &&
+    IteratorPrototype.find === find &&
     IteratorConstructor !== undefined &&
     'from' in IteratorConstructor &&
     IteratorConstructor.from === iteratorFrom

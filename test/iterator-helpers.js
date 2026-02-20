@@ -241,6 +241,16 @@ describe('Iterator helpers', () => {
       const iter = IteratorConstructor.from(original)
       expect(iter).to.equal(original)
     })
+
+    it('handles primitive iterable strings', () => {
+      const IteratorConstructor = globalThis.Iterator
+      if (!IteratorConstructor?.from) {
+        // Skip if Iterator.from is not available after polyfill
+        return
+      }
+      const iter = IteratorConstructor.from('abc')
+      expect([...iter]).to.eql(['a', 'b', 'c'])
+    })
   })
 
   describe('chaining', () => {
