@@ -7,7 +7,7 @@ describe('Promise.try', () => {
     expect(isPolyfilled).to.be.a('function')
     expect(apply).to.be.a('function')
     expect(isSupported()).to.be.a('boolean')
-    expect(isPolyfilled()).to.be.a('boolean')
+    expect(isPolyfilled()).to.equal(false)
   })
 
   it('resolves with the return value of a successful function', async () => {

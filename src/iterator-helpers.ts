@@ -16,21 +16,22 @@ function map<T, U>(this: Iterator<T>, mapper: (value: T, index: number) => U): I
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const iterator = this
   let index = 0
-  return {
-    next() {
-      const result = iterator.next()
-      if (result.done) {
-        return {done: true, value: undefined} as IteratorReturnResult<undefined>
-      }
-      return {done: false, value: mapper(result.value, index++)}
-    },
-    return(value?: U) {
-      if (iterator.return) {
-        iterator.return()
-      }
-      return {done: true, value} as IteratorReturnResult<U>
-    },
-  } as Iterator<U>
+  const iteratorPrototype = getIteratorPrototype()
+  const result = Object.create(iteratorPrototype || {}) as Iterator<U>
+  result.next = function () {
+    const res = iterator.next()
+    if (res.done) {
+      return {done: true, value: undefined} as IteratorReturnResult<undefined>
+    }
+    return {done: false, value: mapper(res.value, index++)}
+  }
+  result.return = function (value?: U) {
+    if (iterator.return) {
+      iterator.return()
+    }
+    return {done: true, value} as IteratorReturnResult<U>
+  }
+  return result
 }
 
 /*#__PURE__*/
@@ -38,26 +39,27 @@ function filter<T>(this: Iterator<T>, predicate: (value: T, index: number) => bo
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const iterator = this
   let index = 0
-  return {
-    next() {
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const result = iterator.next()
-        if (result.done) {
-          return {done: true, value: undefined} as IteratorReturnResult<undefined>
-        }
-        if (predicate(result.value, index++)) {
-          return result
-        }
+  const iteratorPrototype = getIteratorPrototype()
+  const result = Object.create(iteratorPrototype || {}) as Iterator<T>
+  result.next = function () {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const res = iterator.next()
+      if (res.done) {
+        return {done: true, value: undefined} as IteratorReturnResult<undefined>
       }
-    },
-    return(value?: T) {
-      if (iterator.return) {
-        iterator.return()
+      if (predicate(res.value, index++)) {
+        return res
       }
-      return {done: true, value} as IteratorReturnResult<T>
-    },
-  } as Iterator<T>
+    }
+  }
+  result.return = function (value?: T) {
+    if (iterator.return) {
+      iterator.return()
+    }
+    return {done: true, value} as IteratorReturnResult<T>
+  }
+  return result
 }
 
 /*#__PURE__*/
@@ -65,24 +67,25 @@ function take<T>(this: Iterator<T>, limit: number): Iterator<T> {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const iterator = this
   let remaining = limit
-  return {
-    next() {
-      if (remaining <= 0) {
-        if (iterator.return) {
-          iterator.return()
-        }
-        return {done: true, value: undefined} as IteratorReturnResult<undefined>
-      }
-      remaining--
-      return iterator.next()
-    },
-    return(value?: T) {
+  const iteratorPrototype = getIteratorPrototype()
+  const result = Object.create(iteratorPrototype || {}) as Iterator<T>
+  result.next = function () {
+    if (remaining <= 0) {
       if (iterator.return) {
         iterator.return()
       }
-      return {done: true, value} as IteratorReturnResult<T>
-    },
-  } as Iterator<T>
+      return {done: true, value: undefined} as IteratorReturnResult<undefined>
+    }
+    remaining--
+    return iterator.next()
+  }
+  result.return = function (value?: T) {
+    if (iterator.return) {
+      iterator.return()
+    }
+    return {done: true, value} as IteratorReturnResult<T>
+  }
+  return result
 }
 
 /*#__PURE__*/
@@ -90,24 +93,25 @@ function drop<T>(this: Iterator<T>, limit: number): Iterator<T> {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const iterator = this
   let remaining = limit
-  return {
-    next() {
-      while (remaining > 0) {
-        const result = iterator.next()
-        if (result.done) {
-          return {done: true, value: undefined} as IteratorReturnResult<undefined>
-        }
-        remaining--
+  const iteratorPrototype = getIteratorPrototype()
+  const result = Object.create(iteratorPrototype || {}) as Iterator<T>
+  result.next = function () {
+    while (remaining > 0) {
+      const res = iterator.next()
+      if (res.done) {
+        return {done: true, value: undefined} as IteratorReturnResult<undefined>
       }
-      return iterator.next()
-    },
-    return(value?: T) {
-      if (iterator.return) {
-        iterator.return()
-      }
-      return {done: true, value} as IteratorReturnResult<T>
-    },
-  } as Iterator<T>
+      remaining--
+    }
+    return iterator.next()
+  }
+  result.return = function (value?: T) {
+    if (iterator.return) {
+      iterator.return()
+    }
+    return {done: true, value} as IteratorReturnResult<T>
+  }
+  return result
 }
 
 /*#__PURE__*/
@@ -116,38 +120,38 @@ function flatMap<T, U>(this: Iterator<T>, mapper: (value: T, index: number) => I
   const iterator = this
   let index = 0
   let innerIterator: Iterator<U> | null = null
-
-  return {
-    next() {
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        if (innerIterator) {
-          const result = innerIterator.next()
-          if (!result.done) {
-            return result
-          }
-          innerIterator = null
+  const iteratorPrototype = getIteratorPrototype()
+  const result = Object.create(iteratorPrototype || {}) as Iterator<U>
+  result.next = function () {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      if (innerIterator) {
+        const res = innerIterator.next()
+        if (!res.done) {
+          return res
         }
+        innerIterator = null
+      }
 
-        const result = iterator.next()
-        if (result.done) {
-          return {done: true, value: undefined} as IteratorReturnResult<undefined>
-        }
+      const res = iterator.next()
+      if (res.done) {
+        return {done: true, value: undefined} as IteratorReturnResult<undefined>
+      }
 
-        const mapped = mapper(result.value, index++)
-        innerIterator = Symbol.iterator in mapped ? mapped[Symbol.iterator]() : (mapped as Iterator<U>)
-      }
-    },
-    return(value?: U) {
-      if (innerIterator?.return) {
-        innerIterator.return()
-      }
-      if (iterator.return) {
-        iterator.return()
-      }
-      return {done: true, value} as IteratorReturnResult<U>
-    },
-  } as Iterator<U>
+      const mapped = mapper(res.value, index++)
+      innerIterator = Symbol.iterator in mapped ? mapped[Symbol.iterator]() : (mapped as Iterator<U>)
+    }
+  }
+  result.return = function (value?: U) {
+    if (innerIterator?.return) {
+      innerIterator.return()
+    }
+    if (iterator.return) {
+      iterator.return()
+    }
+    return {done: true, value} as IteratorReturnResult<U>
+  }
+  return result
 }
 
 /*#__PURE__*/
@@ -353,7 +357,11 @@ export function apply(): void {
     }
   }
 
-  const IteratorConstructor = (globalThis as typeof globalThis & {Iterator?: {from?: unknown}}).Iterator
+  let IteratorConstructor = (globalThis as typeof globalThis & {Iterator?: {from?: unknown}}).Iterator
+  if (!IteratorConstructor) {
+    ;(globalThis as typeof globalThis & {Iterator?: unknown}).Iterator = {}
+    IteratorConstructor = (globalThis as typeof globalThis & {Iterator?: {from?: unknown}}).Iterator
+  }
   if (IteratorConstructor && !('from' in IteratorConstructor)) {
     Object.assign(IteratorConstructor, {from: iteratorFrom})
   }

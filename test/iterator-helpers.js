@@ -8,7 +8,7 @@ describe('Iterator helpers', () => {
     expect(isPolyfilled).to.be.a('function')
     expect(apply).to.be.a('function')
     expect(isSupported()).to.be.a('boolean')
-    expect(isPolyfilled()).to.be.a('boolean')
+    expect(isPolyfilled()).to.equal(false)
   })
 
   // Helper to create an iterator from an array
