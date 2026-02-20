@@ -11,6 +11,40 @@ describe('Iterator helpers', () => {
     expect(isPolyfilled()).to.equal(false)
   })
 
+  it('isSupported returns true when Iterator is a function (native support)', () => {
+    // Native Iterator in Chromium is a function, not an object.
+    // Simulate this by temporarily replacing globalThis.Iterator with a function.
+    const original = globalThis.Iterator
+    try {
+      apply() // ensure polyfill is applied first so prototype methods exist
+      const proto = Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]()))
+      // Create a function-based Iterator with a `from` method, like native Chromium
+      globalThis.Iterator = function Iterator() {}
+      globalThis.Iterator.from = function from() {}
+      // Assign all required methods to the iterator prototype
+      for (const method of [
+        'map',
+        'filter',
+        'take',
+        'drop',
+        'flatMap',
+        'reduce',
+        'toArray',
+        'forEach',
+        'some',
+        'every',
+        'find',
+      ]) {
+        if (!(method in proto)) {
+          proto[method] = function () {}
+        }
+      }
+      expect(isSupported()).to.equal(true)
+    } finally {
+      globalThis.Iterator = original
+    }
+  })
+
   // Helper to create an iterator from an array
   function* arrayIterator(arr) {
     for (const item of arr) {

@@ -316,7 +316,7 @@ export function isSupported(): boolean {
     'every' in IteratorPrototype &&
     'find' in IteratorPrototype &&
     IteratorConstructor !== undefined &&
-    typeof IteratorConstructor === 'object' &&
+    (typeof IteratorConstructor === 'object' || typeof IteratorConstructor === 'function') &&
     IteratorConstructor !== null &&
     'from' in IteratorConstructor
   )
