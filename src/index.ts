@@ -9,6 +9,7 @@ import * as objectGroupBy from './object-groupby.js'
 import * as mapGroupBy from './map-groupby.js'
 import * as promiseTry from './promise-try.js'
 import * as iteratorHelpers from './iterator-helpers.js'
+import * as setMethods from './set-methods.js'
 
 let supportsModalPseudo = false
 try {
@@ -61,6 +62,7 @@ export const polyfills = {
   mapGroupBy,
   promiseTry,
   iteratorHelpers,
+  setMethods,
 }
 
 export function isSupported() {
