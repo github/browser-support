@@ -23,4 +23,4 @@ jobs:
       - run: npm version ${TAG_NAME} --git-tag-version=false
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
-      - run: npm publish
+      - run: npm publish --ignore-scripts
