@@ -50,7 +50,6 @@
         "invokers-polyfill": "^0.5.2"
     },
     "overrides": {
-        "basic-ftp": "5.2.2",
         "koa": "2.16.4"
     }
 }
