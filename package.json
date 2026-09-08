@@ -50,6 +50,7 @@
         "invokers-polyfill": "^0.5.2"
     },
     "overrides": {
-        "koa": "2.16.4"
+        "koa": "2.16.4",
+        "eslint-plugin-escompat": "3.11.6"
     }
 }
