@@ -61,7 +61,13 @@ describe('requestIdleCallback', () => {
     stubVisibility('visible')
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    // Only one idle period is scheduled at a time, and a test may end with that period still waiting for a frame
+    // that never came (e.g. a timeout test). Deliver any such frame so the next test starts from a clean slate.
+    for (let i = 0; i < 3; i += 1) {
+      runFrame()
+      await sleep(10)
+    }
     globalThis.requestAnimationFrame = realRaf
     globalThis.cancelAnimationFrame = realCaf
     delete document.visibilityState
@@ -201,6 +207,114 @@ describe('requestIdleCallback', () => {
       busyWait(15)
       await sleep(100)
       expect(remaining).to.be.greaterThan(8)
+    })
+  })
+
+  describe('idle periods', () => {
+    it('runs several callbacks in FIFO order', async () => {
+      const order = []
+      for (let i = 0; i < 5; i += 1) requestIdleCallback(() => order.push(i))
+      runFrame()
+      await sleep(100)
+      expect(order).to.eql([0, 1, 2, 3, 4])
+    })
+
+    it('shares one deadline between callbacks queued together', async () => {
+      // Read inside the callback: a read after `await` can be delayed on a loaded machine.
+      let secondRemaining
+      requestIdleCallback(() => busyWait(6))
+      requestIdleCallback(deadline => {
+        secondRemaining = deadline.timeRemaining()
+      })
+      runFrame()
+      await sleep(100)
+      expect(secondRemaining).to.be.a('number')
+      expect(secondRemaining).to.be.lessThan(5)
+      expect(secondRemaining).to.be.greaterThanOrEqual(0)
+    })
+
+    it('defers the remaining callbacks to the next frame once the deadline has passed', async () => {
+      const ran = []
+      requestIdleCallback(() => {
+        ran.push('first')
+        busyWait(12)
+      })
+      requestIdleCallback(() => ran.push('second'))
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['first'])
+
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['first', 'second'])
+    })
+
+    it('runs a callback scheduled from inside a running callback in a later period', async () => {
+      const ran = []
+      requestIdleCallback(() => {
+        ran.push('outer')
+        requestIdleCallback(() => ran.push('inner'))
+      })
+      requestIdleCallback(() => ran.push('sibling'))
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['outer', 'sibling'])
+
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['outer', 'sibling', 'inner'])
+    })
+
+    it('does not strand later callbacks when a callback throws', async () => {
+      const savedOnError = window.onerror
+      const errors = []
+      // Mocha fails the running test on an uncaught error via window.onerror; record it instead.
+      window.onerror = (message, source, line, column, error) => {
+        errors.push(error?.message ?? String(message))
+        return true
+      }
+      try {
+        const ran = []
+        requestIdleCallback(() => {
+          throw new Error('callback failure')
+        })
+        requestIdleCallback(() => ran.push('second'))
+        requestIdleCallback(() => ran.push('third'))
+        runFrame()
+        await sleep(100)
+        expect(errors).to.have.lengthOf(1)
+        expect(errors[0]).to.contain('callback failure')
+
+        runFrame()
+        await sleep(100)
+        expect(ran).to.eql(['second', 'third'])
+        expect(errors).to.have.lengthOf(1)
+      } finally {
+        window.onerror = savedOnError
+      }
+    })
+
+    it('does not run every queued callback in one period when each takes a while', async () => {
+      const total = 8
+      const ran = []
+      for (let i = 0; i < total; i += 1) {
+        requestIdleCallback(() => {
+          ran.push(i)
+          busyWait(3)
+        })
+      }
+      runFrame()
+      await sleep(100)
+      // The first callback always runs, but 8 x 3ms cannot fit in one 10ms period.
+      expect(ran.length).to.be.greaterThanOrEqual(1)
+      expect(ran.length).to.be.lessThan(total)
+
+      // Nothing is lost: each further frame lets more callbacks run, still in order.
+      for (let frames = 0; frames < total && ran.length < total; frames += 1) {
+        runFrame()
+        await sleep(100)
+      }
+      expect(ran).to.eql([0, 1, 2, 3, 4, 5, 6, 7])
     })
   })
 
