@@ -128,6 +128,15 @@ describe('requestIdleCallback', () => {
       expect(calls).to.equal(0)
     })
 
+    it('throws without registering the callback when options.timeout cannot be converted', async () => {
+      let calls = 0
+      expect(() => requestIdleCallback(() => calls++, {timeout: Symbol('bad')})).to.throw(TypeError)
+      requestIdleCallback(() => {})
+      runFrame()
+      await sleep(100)
+      expect(calls).to.equal(0)
+    })
+
     it('returns distinct numeric ids', () => {
       const ids = [requestIdleCallback(() => {}), requestIdleCallback(() => {}), requestIdleCallback(() => {})]
       for (const id of ids) {
@@ -220,35 +229,104 @@ describe('requestIdleCallback', () => {
       expect(order).to.eql([0, 1, 2, 3, 4])
     })
 
-    it('shares one deadline between callbacks queued together in the same slice', async () => {
-      // Read inside the callback: a read after `await` can be delayed on a loaded machine.
-      // The first callback uses 3ms of the 5ms slice, so the second starts in the same slice and sees what is left.
-      // (A second callback that began a fresh slice would see about 5ms.)
+    it('caps a later callback at what is left of the 10ms period', async () => {
+      // Read inside the callbacks: a read after `await` can be delayed on a loaded machine.
+      let firstStart
+      let secondStart
       let secondRemaining
-      requestIdleCallback(() => busyWait(3))
+      requestIdleCallback(() => {
+        firstStart = performance.now()
+        busyWait(7)
+      })
       requestIdleCallback(deadline => {
+        secondStart = performance.now()
         secondRemaining = deadline.timeRemaining()
       })
-      runFrame()
-      await sleep(100)
+      // A stalled machine can push the second callback into the next frame, so deliver more frames if needed.
+      for (let frames = 0; frames < 3 && secondRemaining === undefined; frames += 1) {
+        runFrame()
+        await sleep(100)
+      }
       expect(secondRemaining).to.be.a('number')
-      expect(secondRemaining).to.be.lessThan(2.5)
       expect(secondRemaining).to.be.greaterThanOrEqual(0)
+      expect(secondRemaining).to.be.lessThanOrEqual(5)
+      // The period opened no later than the first callback, so its deadline is at most firstStart + 10.
+      if (secondStart - firstStart < 10) {
+        expect(secondRemaining).to.be.lessThanOrEqual(firstStart + 10 - secondStart + 0.01)
+      }
     })
 
-    it('yields to the event loop between slices of one period', async () => {
+    it('lets promise continuations run between callbacks of one period', async () => {
       const log = []
       requestIdleCallback(() => {
         log.push('A')
         queueMicrotask(() => log.push('micro'))
-        busyWait(6)
       })
       requestIdleCallback(() => log.push('B'))
       // Only one frame is delivered: B must still run, because the 10ms period has budget left.
       runFrame()
       await sleep(100)
-      // A microtask queued by A runs before B only if B is in a separate task.
       expect(log).to.eql(['A', 'micro', 'B'])
+    })
+
+    it('runs the next callback in a separate task, after the whole microtask queue drains', async () => {
+      const log = []
+      requestIdleCallback(() => {
+        log.push('A')
+        // A chain of microtasks: a yield that is itself a microtask would let B in before the chain ends.
+        let depth = 0
+        const step = () => {
+          depth += 1
+          if (depth < 5) queueMicrotask(step)
+          else log.push('chain-end')
+        }
+        queueMicrotask(step)
+      })
+      requestIdleCallback(() => log.push('B'))
+      runFrame()
+      await sleep(100)
+      expect(log).to.eql(['A', 'chain-end', 'B'])
+    })
+
+    it('lets a promise continuation cancel the next callback before it runs', async () => {
+      const ran = []
+      const ids = {}
+      requestIdleCallback(async () => {
+        ran.push('A')
+        await null
+        cancelIdleCallback(ids.second)
+      })
+      ids.second = requestIdleCallback(() => ran.push('B'))
+      requestIdleCallback(() => ran.push('C'))
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['A', 'C'])
+    })
+
+    it('waits for the next frame when a request is made after the frame gate fired but before the period opens', async () => {
+      const ran = []
+      requestIdleCallback(() => ran.push('first'))
+      runFrame()
+      // The gate has fired and the period's task is queued: this request has not been through a paint yet.
+      requestIdleCallback(() => ran.push('late'))
+      await sleep(100)
+      expect(ran).to.eql(['first'])
+
+      runFrame()
+      await sleep(100)
+      expect(ran).to.eql(['first', 'late'])
+    })
+
+    it('cancels a request that is waiting for the next frame after the gate fired', async () => {
+      let calls = 0
+      requestIdleCallback(() => {})
+      runFrame()
+      const id = requestIdleCallback(() => calls++)
+      cancelIdleCallback(id)
+      await sleep(100)
+      runFrame()
+      await sleep(100)
+      expect(calls).to.equal(0)
     })
 
     it('keeps running callbacks across slices until the 10ms period budget is used up', async () => {
@@ -352,6 +430,30 @@ describe('requestIdleCallback', () => {
         await sleep(100)
         expect(ran).to.eql(['second', 'third'])
         expect(errors).to.have.lengthOf(1)
+      } finally {
+        window.onerror = savedOnError
+      }
+    })
+
+    it('does not strand later callbacks when a callback in a later task of the period throws', async () => {
+      const savedOnError = window.onerror
+      const errors = []
+      window.onerror = (message, source, line, column, error) => {
+        errors.push(error?.message ?? String(message))
+        return true
+      }
+      try {
+        const ran = []
+        requestIdleCallback(() => ran.push('first'))
+        requestIdleCallback(() => {
+          throw new Error('later failure')
+        })
+        requestIdleCallback(() => ran.push('third'))
+        // One frame only: 'third' runs in a task after the one that threw.
+        runFrame()
+        await sleep(100)
+        expect(errors).to.eql(['later failure'])
+        expect(ran).to.eql(['first', 'third'])
       } finally {
         window.onerror = savedOnError
       }
@@ -539,6 +641,37 @@ describe('requestIdleCallback', () => {
       document.dispatchEvent(new Event('visibilitychange'))
       await sleep(100)
       expect(calls).to.equal(0)
+    })
+  })
+
+  describe('animation frames that never arrive', () => {
+    it('runs a request without a timeout through a task fallback while the document stays visible', async () => {
+      const received = []
+      requestIdleCallback(deadline => received.push(deadline.didTimeout))
+      await sleep(100)
+      expect(received).to.eql([])
+      await sleep(400)
+      expect(received).to.eql([false])
+    })
+
+    it('does not open a second period when the frame arrives after the fallback', async () => {
+      let calls = 0
+      requestIdleCallback(() => calls++)
+      await sleep(500)
+      expect(calls).to.equal(1)
+      // The stale frame was cancelled by the fallback, and delivering it anyway must not run anything again.
+      expect(cancelledFrames.size).to.equal(1)
+      runAllIssuedFrames()
+      await sleep(100)
+      expect(calls).to.equal(1)
+    })
+
+    it('does not run the fallback after the frame arrived first', async () => {
+      let calls = 0
+      requestIdleCallback(() => calls++)
+      runFrame()
+      await sleep(500)
+      expect(calls).to.equal(1)
     })
   })
 

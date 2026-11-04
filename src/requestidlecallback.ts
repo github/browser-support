@@ -1,42 +1,57 @@
 // https://w3c.github.io/requestidlecallback/#why50 caps idle deadlines at 50ms. We use a 10ms wall-clock budget per
 // frame instead: this polyfill runs work right after paint, and lab data showed 10ms keeps WebKit presentation delay
-// low. The budget is spent in 5ms slices, each its own task, so input, rendering, React's MessageChannel scheduler,
-// timers and messages interleave with idle work instead of queueing behind one 10ms block.
+// low. Each callback runs in its own task, with at most 5ms of that budget, so input, rendering, React's
+// MessageChannel scheduler, timers and messages interleave with idle work instead of queueing behind one 10ms block,
+// and promise continuations settle between callbacks as they do with native requestIdleCallback.
 const periodMs = 10
 const sliceMs = 5
+// rAF can stop firing while the document still reports `visible` (for example in a display:none cross-origin
+// iframe), so a frame that doesn't arrive in time is replaced by a task.
+const frameFallbackMs = 250
 
 type Entry = {callback: IdleRequestCallback; timeout?: ReturnType<typeof setTimeout>}
 
 const pending = new Map<number, Entry>()
+// Requests made after the frame gate fired but before its period opens have not been through a paint yet, so they
+// wait for the next period.
+const unpainted = new Set<number>()
 let nextId = 1
 let listening = false
 let running = false
 let periodDeadline = 0
 let channel: MessageChannel | undefined
 let frame: number | undefined
+let frameFallback: ReturnType<typeof setTimeout> | undefined
 let task: ReturnType<typeof setTimeout> | undefined
 
+function remove(id: number): void {
+  pending.delete(id)
+  unpainted.delete(id)
+}
+
 function slice(first: boolean): void {
-  const sliceEnd = Math.min(performance.now() + sliceMs, periodDeadline)
-  let ran = !first
+  const now = performance.now()
+  const sliceEnd = Math.min(now + sliceMs, periodDeadline)
   try {
-    // Each slice acts as an idle period: its callbacks share the slice deadline, and callbacks queued while it runs
-    // (including self-rescheduling ones) wait for a later slice, as the spec requires. Allowing later slices in the same
-    // frame matters: holding them for the next frame halved idle throughput in the lab with no INP gain.
-    for (const id of [...pending.keys()]) {
-      if (ran && performance.now() >= sliceEnd) break
-      const entry = pending.get(id)
-      if (!entry) continue
-      ran = true
-      pending.delete(id)
-      clearTimeout(entry.timeout)
-      entry.callback({didTimeout: false, timeRemaining: () => Math.max(0, sliceEnd - performance.now())})
+    if (first || now < periodDeadline) {
+      // Callbacks queued during the period (including self-rescheduling ones) may run in a later task of the same
+      // period, bounded by the wall deadline. The spec defers them to the next idle period, but that would give a
+      // self-rescheduling queue only one callback per frame.
+      for (const [id, entry] of pending) {
+        if (unpainted.has(id)) continue
+        remove(id)
+        clearTimeout(entry.timeout)
+        const {callback} = entry
+        callback({didTimeout: false, timeRemaining: () => Math.max(0, sliceEnd - performance.now())})
+        break
+      }
     }
   } finally {
-    if (pending.size > 0 && performance.now() < periodDeadline) {
+    if (pending.size > unpainted.size && performance.now() < periodDeadline) {
       yieldToEventLoop()
     } else {
       running = false
+      unpainted.clear()
       if (pending.size > 0) schedule()
     }
   }
@@ -66,7 +81,10 @@ function openPeriod(): void {
 }
 
 function post(): void {
+  if (frame !== undefined) cancelAnimationFrame(frame)
+  clearTimeout(frameFallback)
   frame = undefined
+  frameFallback = undefined
   task = setTimeout(openPeriod, 0)
 }
 
@@ -78,7 +96,14 @@ function schedule(): void {
       document.addEventListener('visibilitychange', onVisibilityChange)
     }
     if (document.visibilityState !== 'hidden') {
-      frame = requestAnimationFrame(post)
+      // A stale frame or fallback must not open a second period once the gate has moved on.
+      const gate = requestAnimationFrame(() => {
+        if (frame === gate) post()
+      })
+      frame = gate
+      frameFallback = setTimeout(() => {
+        if (frame === gate) post()
+      }, frameFallbackMs)
       return
     }
   }
@@ -86,24 +111,24 @@ function schedule(): void {
 }
 
 function onVisibilityChange(): void {
-  if (document.visibilityState !== 'hidden' || frame === undefined) return
-  cancelAnimationFrame(frame)
-  post()
+  if (document.visibilityState === 'hidden' && frame !== undefined) post()
 }
 
 export function requestIdleCallback(callback: IdleRequestCallback, options: IdleRequestOptions = {}): number {
-  // Read before registering anything so a throwing getter can't leave a callback scheduled without an id.
-  // `?.` rather than relying on the default: native accepts null, which bypasses default parameters.
+  // Convert before registering anything so a throwing getter or value can't leave a callback scheduled without an
+  // id. `?.` rather than relying on the default: native accepts null, which bypasses default parameters.
   const timeout = options?.timeout
+  const delay = timeout && timeout > 0 ? timeout : 0
   const id = nextId++
   const entry: Entry = {callback}
   pending.set(id, entry)
-  if (timeout && timeout > 0) {
+  if (task !== undefined) unpainted.add(id)
+  if (delay > 0) {
     entry.timeout = setTimeout(() => {
       if (pending.get(id) !== entry) return
-      pending.delete(id)
+      remove(id)
       callback({didTimeout: true, timeRemaining: () => 0})
-    }, timeout)
+    }, delay)
   }
   schedule()
   return id
@@ -112,7 +137,7 @@ export function requestIdleCallback(callback: IdleRequestCallback, options: Idle
 export function cancelIdleCallback(id: number): void {
   const entry = pending.get(id)
   if (!entry) return
-  pending.delete(id)
+  remove(id)
   clearTimeout(entry.timeout)
 }
 
