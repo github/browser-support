@@ -376,20 +376,137 @@ describe('requestIdleCallback', () => {
       })
       runFrame()
       await sleep(100)
+      // The short outer callback's request waits for the next frame.
+      expect(log).to.eql(['outer', 'micro'])
+      runFrame()
+      await sleep(100)
       // The microtask runs when the outer callback's task ends; the inner callback must come after it.
       expect(log).to.eql(['outer', 'micro', 'inner'])
     })
 
-    it('may run a callback scheduled from a short callback later in the same period, without a new frame', async () => {
+    it('waits for the next frame to run a callback scheduled from a short callback', async () => {
       const ran = []
       requestIdleCallback(() => {
         ran.push('outer')
         requestIdleCallback(() => ran.push('inner'))
       })
       runFrame()
-      // No further runFrame(): the period still has budget, so the inner callback runs after a task tick.
+      // The period still has budget, but the outer callback finished early, so the spec's rule applies.
+      await sleep(100)
+      expect(ran).to.eql(['outer'])
+
+      runFrame()
       await sleep(100)
       expect(ran).to.eql(['outer', 'inner'])
+    })
+
+    describe('a callback that uses its whole slice and requeues', () => {
+      // Whether the continuation fits in the 10ms period depends on how fast the machine runs the next task, and a
+      // continuation that misses the period waits for a frame that never comes here. So retry a few times: the
+      // behavior is proven by any one attempt where the continuation runs without a further frame.
+      const continuesInSamePeriod = async exhaust => {
+        for (let attempt = 0; attempt < 5; attempt += 1) {
+          let continued = false
+          requestIdleCallback(deadline => {
+            exhaust(deadline)
+            requestIdleCallback(() => {
+              continued = true
+            })
+          })
+          runFrame()
+          await sleep(50)
+          if (continued) return true
+          // Flush the missed attempt: its continuation runs in the next frame.
+          runFrame()
+          await sleep(50)
+        }
+        return false
+      }
+
+      it('may run the continuation later in the same period, when it looped on timeRemaining()', async () => {
+        const continued = await continuesInSamePeriod(deadline => {
+          while (deadline.timeRemaining() > 0) {
+            // spin
+          }
+        })
+        expect(continued).to.equal(true)
+      })
+
+      it('may run the continuation later in the same period, when it ran past its slice', async () => {
+        const continued = await continuesInSamePeriod(() => busyWait(6))
+        expect(continued).to.equal(true)
+      })
+    })
+
+    it('runs a cheap self-rescheduling callback about once per frame', async () => {
+      const frames = 5
+      let count = 0
+      let polling = true
+      const poll = () =>
+        requestIdleCallback(() => {
+          count += 1
+          if (polling) poll()
+        })
+      try {
+        poll()
+        for (let i = 0; i < frames; i += 1) {
+          runFrame()
+          await sleep(20)
+        }
+      } finally {
+        polling = false
+      }
+      expect(count).to.be.greaterThanOrEqual(1)
+      expect(count).to.be.lessThanOrEqual(frames + 1)
+    })
+
+    it('waits for the next frame when a request is made outside any callback while a period is running', async () => {
+      const ran = []
+      requestIdleCallback(() => {
+        ran.push('A')
+        // Runs after A's task ends and before the next slice, while the period is still open for B.
+        queueMicrotask(() => requestIdleCallback(() => ran.push('C')))
+      })
+      requestIdleCallback(() => ran.push('B'))
+      runFrame()
+      await sleep(100)
+      expect(ran).to.not.include('C')
+
+      for (let frames = 0; frames < 3 && ran.length < 3; frames += 1) {
+        runFrame()
+        await sleep(100)
+      }
+      expect(ran).to.eql(['A', 'B', 'C'])
+    })
+
+    it('still defers the request of a short callback that throws, and does not strand later callbacks', async () => {
+      const savedOnError = window.onerror
+      const errors = []
+      window.onerror = (message, source, line, column, error) => {
+        errors.push(error?.message ?? String(message))
+        return true
+      }
+      try {
+        const ran = []
+        requestIdleCallback(() => {
+          requestIdleCallback(() => ran.push('again'))
+          throw new Error('after requesting')
+        })
+        requestIdleCallback(() => ran.push('B'))
+        runFrame()
+        await sleep(100)
+        expect(errors).to.eql(['after requesting'])
+        expect(ran).to.not.include('again')
+
+        for (let frames = 0; frames < 3 && ran.length < 2; frames += 1) {
+          runFrame()
+          await sleep(100)
+        }
+        expect(ran).to.eql(['B', 'again'])
+        expect(errors).to.have.lengthOf(1)
+      } finally {
+        window.onerror = savedOnError
+      }
     })
 
     it('runs a callback scheduled from inside a callback exactly once and after its siblings', async () => {

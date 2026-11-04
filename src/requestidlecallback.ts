@@ -3,6 +3,10 @@
 // low. Each callback runs in its own task, with at most 5ms of that budget, so input, rendering, React's
 // MessageChannel scheduler, timers and messages interleave with idle work instead of queueing behind one 10ms block,
 // and promise continuations settle between callbacks as they do with native requestIdleCallback.
+// Like native, requests made while a period is running wait for the next period. A cheap self-rescheduling poller
+// would otherwise run thousands of times a second in one period and hold a core. The exception is a request made
+// synchronously by a callback that used its whole slice: that is a work loop continuing, and may run later in the
+// same period.
 const periodMs = 10
 const sliceMs = 5
 // rAF can stop firing while the document still reports `visible` (for example in a display:none cross-origin
@@ -15,9 +19,11 @@ const hiddenGapMs = 100
 type Entry = {callback: IdleRequestCallback; timeout?: ReturnType<typeof setTimeout>}
 
 const pending = new Map<number, Entry>()
-// Requests made after the frame gate fired but before its period opens have not been through a paint yet, so they
-// wait for the next period.
-const unpainted = new Set<number>()
+// Requests that must wait for the next period: ones made after the frame gate fired but before its period opens
+// (not painted yet), and ones made while a period is running, unless the requesting callback used its whole slice.
+const deferred = new Set<number>()
+// Ids requested synchronously by the idle callback that is running right now, undefined outside of one.
+let requestedByCallback: Set<number> | undefined
 let nextId = 1
 let listening = false
 let running = false
@@ -29,7 +35,7 @@ let task: ReturnType<typeof setTimeout> | undefined
 
 function remove(id: number): void {
   pending.delete(id)
-  unpainted.delete(id)
+  deferred.delete(id)
 }
 
 function slice(first: boolean): void {
@@ -37,24 +43,35 @@ function slice(first: boolean): void {
   const sliceEnd = Math.min(now + sliceMs, periodDeadline)
   try {
     if (first || now < periodDeadline) {
-      // Callbacks queued during the period (including self-rescheduling ones) may run in a later task of the same
-      // period, bounded by the wall deadline. The spec defers them to the next idle period, but that would give a
-      // self-rescheduling queue only one callback per frame.
+      // Callbacks queued before the period opened run in later tasks of it, bounded by the wall deadline. Requests
+      // made by a callback that returned with time left in its slice are deferred below, as the spec says. Ones from
+      // a callback that used its whole slice stay eligible, so a work loop that requeues itself keeps its throughput.
       for (const [id, entry] of pending) {
-        if (unpainted.has(id)) continue
+        if (deferred.has(id)) continue
         remove(id)
         clearTimeout(entry.timeout)
         const {callback} = entry
-        callback({didTimeout: false, timeRemaining: () => Math.max(0, sliceEnd - performance.now())})
+        const requested = new Set<number>()
+        requestedByCallback = requested
+        try {
+          callback({didTimeout: false, timeRemaining: () => Math.max(0, sliceEnd - performance.now())})
+        } finally {
+          requestedByCallback = undefined
+          if (performance.now() < sliceEnd) {
+            for (const requestedId of requested) {
+              if (pending.has(requestedId)) deferred.add(requestedId)
+            }
+          }
+        }
         break
       }
     }
   } finally {
-    if (pending.size > unpainted.size && performance.now() < periodDeadline) {
+    if (pending.size > deferred.size && performance.now() < periodDeadline) {
       yieldToEventLoop()
     } else {
       running = false
-      unpainted.clear()
+      deferred.clear()
       if (pending.size > 0) schedule()
     }
   }
@@ -81,7 +98,7 @@ function openPeriod(): void {
   running = true
   periodDeadline = performance.now() + periodMs
   // Nothing was painted while hidden, so there is no paint gate left to honor.
-  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') unpainted.clear()
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') deferred.clear()
   slice(true)
 }
 
@@ -129,7 +146,9 @@ export function requestIdleCallback(callback: IdleRequestCallback, options: Idle
   const id = nextId++
   const entry: Entry = {callback}
   pending.set(id, entry)
-  if (task !== undefined) unpainted.add(id)
+  if (task !== undefined) deferred.add(id)
+  else if (requestedByCallback) requestedByCallback.add(id)
+  else if (running) deferred.add(id)
   if (delay > 0) {
     entry.timeout = setTimeout(() => {
       if (pending.get(id) !== entry) return
