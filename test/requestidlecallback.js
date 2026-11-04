@@ -606,8 +606,29 @@ describe('requestIdleCallback', () => {
       stubVisibility('hidden')
       const received = []
       requestIdleCallback(deadline => received.push(deadline.didTimeout))
-      await sleep(100)
+      await sleep(300)
       expect(received).to.eql([false])
+    })
+
+    it('spaces out periods of a self-rescheduling queue so a hidden tab does not spin', async () => {
+      stubVisibility('hidden')
+      const stamps = []
+      let running = true
+      const loop = () =>
+        requestIdleCallback(() => {
+          stamps.push(performance.now())
+          if (running) loop()
+        })
+      loop()
+      await sleep(600)
+      running = false
+      await sleep(250)
+      const gaps = stamps
+        .slice(1)
+        .map((t, i) => t - stamps[i])
+        .filter(gap => gap > 5)
+      expect(gaps.length).to.be.greaterThan(1)
+      expect(Math.min(...gaps)).to.be.greaterThan(80)
     })
 
     it('runs without the frame when the document becomes hidden while waiting', async () => {

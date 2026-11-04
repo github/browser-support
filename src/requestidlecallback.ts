@@ -8,6 +8,9 @@ const sliceMs = 5
 // rAF can stop firing while the document still reports `visible` (for example in a display:none cross-origin
 // iframe), so a frame that doesn't arrive in time is replaced by a task.
 const frameFallbackMs = 250
+// With no frames to pace periods (hidden tab), only a timer separates them. Real Safari showed back-to-back 10ms
+// periods using more than half a core for a self-rescheduling queue, so hidden periods are spaced out.
+const hiddenGapMs = 100
 
 type Entry = {callback: IdleRequestCallback; timeout?: ReturnType<typeof setTimeout>}
 
@@ -77,15 +80,17 @@ function openPeriod(): void {
   task = undefined
   running = true
   periodDeadline = performance.now() + periodMs
+  // Nothing was painted while hidden, so there is no paint gate left to honor.
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') unpainted.clear()
   slice(true)
 }
 
-function post(): void {
+function post(delay = 0): void {
   if (frame !== undefined) cancelAnimationFrame(frame)
   clearTimeout(frameFallback)
   frame = undefined
   frameFallback = undefined
-  task = setTimeout(openPeriod, 0)
+  task = setTimeout(openPeriod, delay)
 }
 
 function schedule(): void {
@@ -106,6 +111,8 @@ function schedule(): void {
       }, frameFallbackMs)
       return
     }
+    post(hiddenGapMs)
+    return
   }
   post()
 }
