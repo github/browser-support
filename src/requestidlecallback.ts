@@ -1,8 +1,9 @@
-// https://w3c.github.io/requestidlecallback/#why50 caps idle deadlines at 50ms. We use 10ms instead: this
-// polyfill runs work right after paint, so it still delays the next frame's input handling. As in the spec,
-// all callbacks in one idle period share a single deadline, so a burst of callbacks can't stack up 10ms each
-// in one frame. Lab data showed a 10ms budget keeps WebKit presentation delay low.
-const maxDeadline = 10
+// https://w3c.github.io/requestidlecallback/#why50 caps idle deadlines at 50ms. We use a 10ms wall-clock budget per
+// frame instead: this polyfill runs work right after paint, and lab data showed 10ms keeps WebKit presentation delay
+// low. The budget is spent in 5ms slices, each its own task, so input, rendering, React's MessageChannel scheduler,
+// timers and messages interleave with idle work instead of queueing behind one 10ms block.
+const periodMs = 10
+const sliceMs = 5
 
 type Entry = {callback: IdleRequestCallback; timeout?: ReturnType<typeof setTimeout>}
 
@@ -10,34 +11,63 @@ const pending = new Map<number, Entry>()
 let nextId = 1
 let listening = false
 let running = false
+let periodDeadline = 0
+let channel: MessageChannel | undefined
 let frame: number | undefined
 let task: ReturnType<typeof setTimeout> | undefined
 
-function runPeriod(): void {
-  task = undefined
-  running = true
-  const deadline = performance.now() + maxDeadline
-  let ran = false
+function slice(first: boolean): void {
+  const sliceEnd = Math.min(performance.now() + sliceMs, periodDeadline)
+  let ran = !first
   try {
-    // Snapshot so callbacks queued during this period wait for the next one.
+    // Callbacks queued during the period (including self-rescheduling ones) may run in a later slice of the same
+    // period, bounded by the wall deadline. The spec defers them to the next idle period, but that would give a
+    // self-rescheduling queue only one slice per frame.
     for (const id of [...pending.keys()]) {
-      if (ran && performance.now() >= deadline) break
+      if (ran && performance.now() >= sliceEnd) break
       const entry = pending.get(id)
       if (!entry) continue
       ran = true
       pending.delete(id)
       clearTimeout(entry.timeout)
-      entry.callback({didTimeout: false, timeRemaining: () => Math.max(0, deadline - performance.now())})
+      entry.callback({didTimeout: false, timeRemaining: () => Math.max(0, sliceEnd - performance.now())})
     }
   } finally {
-    running = false
-    if (pending.size > 0) schedule()
+    if (pending.size > 0 && performance.now() < periodDeadline) {
+      yieldToEventLoop()
+    } else {
+      running = false
+      if (pending.size > 0) schedule()
+    }
   }
+}
+
+function nextSlice(): void {
+  slice(false)
+}
+
+function yieldToEventLoop(): void {
+  if (typeof MessageChannel === 'undefined') {
+    setTimeout(nextSlice, 0)
+    return
+  }
+  if (!channel) {
+    channel = new MessageChannel()
+    channel.port1.onmessage = nextSlice
+  }
+  channel.port2.postMessage(null)
+}
+
+function openPeriod(): void {
+  task = undefined
+  running = true
+  periodDeadline = performance.now() + periodMs
+  slice(true)
 }
 
 function post(): void {
   frame = undefined
-  task = setTimeout(runPeriod, 0)
+  task = setTimeout(openPeriod, 0)
 }
 
 function schedule(): void {

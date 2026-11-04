@@ -89,7 +89,7 @@ describe('requestIdleCallback', () => {
     })
     expect(arg).to.have.property('didTimeout').to.be.a('boolean')
     expect(arg).to.have.property('timeRemaining').to.be.a('function')
-    expect(arg.timeRemaining()).to.be.a('number').lessThanOrEqual(10).greaterThanOrEqual(0)
+    expect(arg.timeRemaining()).to.be.a('number').lessThanOrEqual(5).greaterThanOrEqual(0)
   })
 
   describe('scheduling', () => {
@@ -163,14 +163,14 @@ describe('requestIdleCallback', () => {
       expect(deadline.didTimeout).to.equal(false)
     })
 
-    it('has close to 10ms remaining when the callback starts', async () => {
+    it('has close to 5ms remaining (one slice) when the first callback starts', async () => {
       // Read inside the callback: a read after `await` can be delayed past the budget on a loaded machine.
       const remaining = await new Promise(resolve => {
         requestIdleCallback(deadline => resolve(deadline.timeRemaining()))
         runFrame()
       })
-      expect(remaining).to.be.greaterThan(8)
-      expect(remaining).to.be.lessThanOrEqual(10)
+      expect(remaining).to.be.greaterThan(3)
+      expect(remaining).to.be.lessThanOrEqual(5)
     })
 
     it('decreases as the callback keeps running', async () => {
@@ -183,13 +183,14 @@ describe('requestIdleCallback', () => {
         runFrame()
       })
       expect(readings.second).to.be.lessThan(readings.first)
-      expect(readings.second).to.be.lessThanOrEqual(7.5)
+      // 5ms slice minus 3ms of spinning.
+      expect(readings.second).to.be.lessThanOrEqual(2.5)
     })
 
-    it('reaches 0 after running longer than 10ms', async () => {
+    it('reaches 0 after running longer than 5ms', async () => {
       const remaining = await new Promise(resolve => {
         requestIdleCallback(deadline => {
-          busyWait(12)
+          busyWait(6)
           resolve(deadline.timeRemaining())
         })
         runFrame()
@@ -198,7 +199,7 @@ describe('requestIdleCallback', () => {
     })
 
     it('measures the budget from callback start, not from scheduling', async () => {
-      // Hold the main thread so the callback is delayed well past 10ms after scheduling.
+      // Hold the main thread so the callback is delayed well past the budget after scheduling.
       let remaining
       requestIdleCallback(deadline => {
         remaining = deadline.timeRemaining()
@@ -206,7 +207,7 @@ describe('requestIdleCallback', () => {
       runFrame()
       busyWait(15)
       await sleep(100)
-      expect(remaining).to.be.greaterThan(8)
+      expect(remaining).to.be.greaterThan(3)
     })
   })
 
@@ -219,18 +220,57 @@ describe('requestIdleCallback', () => {
       expect(order).to.eql([0, 1, 2, 3, 4])
     })
 
-    it('shares one deadline between callbacks queued together', async () => {
+    it('shares one deadline between callbacks queued together in the same slice', async () => {
       // Read inside the callback: a read after `await` can be delayed on a loaded machine.
+      // The first callback uses 3ms of the 5ms slice, so the second starts in the same slice and sees what is left.
+      // (A second callback that began a fresh slice would see about 5ms.)
       let secondRemaining
-      requestIdleCallback(() => busyWait(6))
+      requestIdleCallback(() => busyWait(3))
       requestIdleCallback(deadline => {
         secondRemaining = deadline.timeRemaining()
       })
       runFrame()
       await sleep(100)
       expect(secondRemaining).to.be.a('number')
-      expect(secondRemaining).to.be.lessThan(5)
+      expect(secondRemaining).to.be.lessThan(2.5)
       expect(secondRemaining).to.be.greaterThanOrEqual(0)
+    })
+
+    it('yields to the event loop between slices of one period', async () => {
+      const log = []
+      requestIdleCallback(() => {
+        log.push('A')
+        queueMicrotask(() => log.push('micro'))
+        busyWait(6)
+      })
+      requestIdleCallback(() => log.push('B'))
+      // Only one frame is delivered: B must still run, because the 10ms period has budget left.
+      runFrame()
+      await sleep(100)
+      // A microtask queued by A runs before B only if B is in a separate task.
+      expect(log).to.eql(['A', 'micro', 'B'])
+    })
+
+    it('keeps running callbacks across slices until the 10ms period budget is used up', async () => {
+      const total = 6
+      const ran = []
+      for (let i = 0; i < total; i += 1) {
+        requestIdleCallback(() => {
+          ran.push(i)
+          busyWait(4)
+        })
+      }
+      runFrame()
+      await sleep(100)
+      // 4ms each: roughly 2-3 fit in 10ms, and the rest wait for the next frame.
+      expect(ran.length).to.be.greaterThanOrEqual(2)
+      expect(ran.length).to.be.lessThan(total)
+
+      for (let frames = 0; frames < total && ran.length < total; frames += 1) {
+        runFrame()
+        await sleep(100)
+      }
+      expect(ran).to.eql([0, 1, 2, 3, 4, 5])
     })
 
     it('defers the remaining callbacks to the next frame once the deadline has passed', async () => {
@@ -249,7 +289,32 @@ describe('requestIdleCallback', () => {
       expect(ran).to.eql(['first', 'second'])
     })
 
-    it('runs a callback scheduled from inside a running callback in a later period', async () => {
+    it('does not run a callback scheduled from inside a running callback in the same task', async () => {
+      const log = []
+      requestIdleCallback(() => {
+        log.push('outer')
+        requestIdleCallback(() => log.push('inner'))
+        queueMicrotask(() => log.push('micro'))
+      })
+      runFrame()
+      await sleep(100)
+      // The microtask runs when the outer callback's task ends; the inner callback must come after it.
+      expect(log).to.eql(['outer', 'micro', 'inner'])
+    })
+
+    it('may run a callback scheduled from a short callback later in the same period, without a new frame', async () => {
+      const ran = []
+      requestIdleCallback(() => {
+        ran.push('outer')
+        requestIdleCallback(() => ran.push('inner'))
+      })
+      runFrame()
+      // No further runFrame(): the period still has budget, so the inner callback runs after a task tick.
+      await sleep(100)
+      expect(ran).to.eql(['outer', 'inner'])
+    })
+
+    it('runs a callback scheduled from inside a callback exactly once and after its siblings', async () => {
       const ran = []
       requestIdleCallback(() => {
         ran.push('outer')
@@ -258,8 +323,6 @@ describe('requestIdleCallback', () => {
       requestIdleCallback(() => ran.push('sibling'))
       runFrame()
       await sleep(100)
-      expect(ran).to.eql(['outer', 'sibling'])
-
       runFrame()
       await sleep(100)
       expect(ran).to.eql(['outer', 'sibling', 'inner'])
