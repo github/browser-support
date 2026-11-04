@@ -46,7 +46,6 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@oddbird/popover-polyfill": "^0.5.2",
         "invokers-polyfill": "^0.5.2"
     },
     "overrides": {
